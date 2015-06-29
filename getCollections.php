@@ -3,7 +3,7 @@ require_once("../../config.php");
 require_once("lib.php");
 require_once($CFG->libdir.'/weblib.php');
 function remoteFileExists($url) {
-    //error_log("URL en cuestion ".$url);
+   // error_log("URL en cuestion ".$url);
     $curl = curl_init($url);
 
     //don't fetch the actual page, you only want to check the connection is ok
@@ -26,30 +26,25 @@ function remoteFileExists($url) {
     }
 
     curl_close($curl);
-    /*if($ret){error_log("BIENN!! hay un archivo para la URL");}
-    else{error_log("No hay ningun archivo para la URl");}
-    */
-		return $ret;
+    return $ret;
 }
 try {
 
 // Moodle_URL valida la dirección y extrae las partes
+//Modifico para ver si la url termina en / o no, y segun eso manejarlo
+if(substr($_POST["url"],-1,1)=='/')
+  $url = new moodle_url($_POST["url"] . 'rest/collections/');
+else  
+  $url = new moodle_url($_POST["url"] . '/rest/collections/');
 
-$url = new moodle_url($_POST["url"] . '/rest/collections/');
-//error_log("mi url es:".$_POST["url"]);
-/*$pad='';
- foreach ($_POST as $key => $value){
-        error_log ($pad . "$key => $value");  
-    } */
+
 $url->remove_all_params();
 //Valido que la dirección termine con /rest/collections
 if (substr($url->get_path(true), -18,18) == '/rest/collections/') {
-  //error_log("llegue a que la url termina en rest collections");
+  
   //if (remoteFileExists($url->get_path(true))) {
     if (remoteFileExists($url)) {
-     /*ACA SE ROMPIA, cambie la llamada del if
-	http://dspace-dev.linti.unlp.edu.ar/rest/collections*/
-     //error_log("verifique que la URL existe");  
+     /*ACA SE ROMPIA, cambie la llamada del if*/  
      //Si la URL existe hago la petición
      //$ch = curl_init($url->get_path(true));
      $ch = curl_init($url);
