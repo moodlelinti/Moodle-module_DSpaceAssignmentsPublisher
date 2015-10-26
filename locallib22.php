@@ -170,15 +170,25 @@ class sword_lib
          
          if($sword_metadata->rights != NULL) {
             $datos["rights"]=$sword_metadata->rights;
+	    error_log("hasta aca bien");
          }
+	else{
+		error_log("no se tomo el campo rights del formulario");	
+	}
          
          if($sword_metadata->language != NULL) {
             $datos["language"]= $sword_metadata->language;
          }
+	else{
+		error_log("no se tomo el campo lenguaje del formulario");	
+	}
          
          if($sword_metadata->publisher != NULL) {
             $datos["publisher"]=$sword_metadata->publisher;
          }
+	 else{
+		error_log("no se tomo el campo publicador del formulario");	
+	}
         
                 
         $this->makeMets($datos);

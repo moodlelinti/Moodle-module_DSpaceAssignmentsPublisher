@@ -25,7 +25,7 @@ require($CFG->dirroot.'/mod/sword/locallib.php');
 
 $context= context_module::instance($cm->id);
 $sword_assign = new sword_assign($context,$cm,$course,$cm_sword);
-
+error_log("aca");
 $sword_assign->sword_submissions($submissions);
 
 

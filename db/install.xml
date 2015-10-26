@@ -14,8 +14,10 @@
 	<FIELD NAME="url" TYPE="char" LENGTH="70" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="username"/>
         <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" PREVIOUS="url" NEXT="password"/>
         <FIELD NAME="password" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" PREVIOUS="username" NEXT="subject"/>
-        <FIELD NAME="subject" TYPE="char" LENGTH="500" NOTNULL="true" SEQUENCE="false" PREVIOUS="password" NEXT="rights"/>
-	<FIELD NAME="rights" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" PREVIOUS="subject" NEXT="language"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="500" NOTNULL="true" SEQUENCE="false" PREVIOUS="password" NEXT="abstrac"/>
+	<FIELD NAME="abstrac" TYPE="char" LENGTH="500" NOTNULL="true" SEQUENCE="false" PREVIOUS="subject" NEXT="type"/>
+	<FIELD NAME="type" TYPE="char" LENGTH="500" NOTNULL="true" SEQUENCE="false" PREVIOUS="abstrac" NEXT="rights"/>
+	<FIELD NAME="rights" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" PREVIOUS="abstrac" NEXT="language"/>
 	<FIELD NAME="language" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" PREVIOUS="rights" NEXT="publisher"/>
 	<FIELD NAME="publisher" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" PREVIOUS="language" NEXT="timecreated" />	
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="publisher" NEXT="timemodified"/>

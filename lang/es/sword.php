@@ -50,6 +50,7 @@ $string['repository']='Información del repositorio ';
 $string['username']='Nombre de Usuario';
 $string['password']='Contraseña';
 $string['metadata']='Valores de los metadatos por defecto';
+$string['abstract']='Resumen';
 $string['subject']='Palabras claves';
 $string['rights']='Derechos';
 $string['language']='Idioma';

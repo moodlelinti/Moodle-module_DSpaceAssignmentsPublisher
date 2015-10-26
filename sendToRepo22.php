@@ -19,7 +19,7 @@ require_login($assignment->course, false, $cm);
 require($CFG->dirroot.'/mod/sword/type/'.$assignment->assignmenttype.'/assignment.class.php');
 $assignmentclass = 'sword_'.$assignment->assignmenttype;
 $assignmentinstance = new $assignmentclass($assignment->id, $assignment, $cm, $course);
-
+error_log("aca 2");
 
 $assignmentinstance->sword_submissions($submissions,$sword_cm_id);
 

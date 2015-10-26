@@ -625,19 +625,41 @@ public function view( $action='grading') {
            }
 	   
          }
+         if($sword_metadata->type != NULL) {
+            $datos["type"]=$sword_metadata->type;
+           error_log("type bien");
+         }
+	else{
+		error_log("no se tomo el campo type del formulario");	
+	}
+	
+         if($sword_metadata->abstrac != NULL) {
+            $datos["abstract"]=$sword_metadata->abstrac;
+           error_log("abstract bien");
+         }
+	else{
+		error_log("no se tomo el campo abstract del formulario");	
+	}
          
          if($sword_metadata->rights != NULL) {
             $datos["rights"]=$sword_metadata->rights;
+           error_log("hasta aca bien");
          }
-         
+	else{
+		error_log("no se tomo el campo rights del formulario");	
+	}
          if($sword_metadata->language != NULL) {
             $datos["language"]= $sword_metadata->language;
          }
-         
+         else{
+		error_log("no se tomo el campo lenguaje del formulario");	
+	}
          if($sword_metadata->publisher != NULL) {
             $datos["publisher"]=$sword_metadata->publisher;
          }
-        
+        else{
+		error_log("no se tomo el campo publicador del formulario");	
+	}
              
         $this->makeMets($datos);
           
@@ -674,7 +696,15 @@ public function view( $action='grading') {
 		$packager->addSubject($subject);
 	    }
 	}
-	
+	if(array_key_exists("type",$datos)){
+		if($datos["type"]=="software"){
+		$packager->setType("http://purl.org/dc/dcmitype/Software");}
+	}
+	else{ error_log("no existe la clave type en el arreglo");}	
+	if(array_key_exists("abstract",$datos)){
+		$packager->setAbstract($datos["abstract"]);
+	}
+	else{ error_log("no existe la clave abstrac en el arreglo");}
 	if (array_key_exists("rights",$datos)){
 	    $packager->addRights($datos["rights"]);
 	}
@@ -733,9 +763,15 @@ public function view( $action='grading') {
 
 		    //$packageformat="http://purl.org/net/sword-types/METSDSpaceSIP";
 		    $packageformat="http://purl.org/net/sword-types/METSDSpaceSIP";
-		    
-		    
-		    
+		    /*error_log($package->getTittle());     //COMENTE ESTAS DOS LINEAS POR QUE SINO NO ANDABA //package es el nombre del archivo a enviar
+		    error_log($package->getPublisher());
+		    */
+
+		    /*guardo una copia del paquete a enviar antes de realizar el envio*/
+		    if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
+    				error_log("no se pudo guardar una copia del envio");
+			}
+			
 		    require_once($CFG->dirroot .'/mod/sword/api/swordappclient.php');
 		    
 		    
@@ -743,10 +779,11 @@ public function view( $action='grading') {
 		    $error = false;
 		    try{
 		        $sac = new SWORDAPPClient();
-			
+			error_log(var_dump($package));
 		        $dr = $sac->deposit($url, $user, $pw, '', $package, $packageformat,$contenttype, false);
-		        
+		        //error_log($dr);
 		   	
+			error_log($dr->sac_status);
 			if ($dr->sac_status!=201) {  
 			      $status='error';
 			      $error = true;

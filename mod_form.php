@@ -118,6 +118,16 @@ class mod_sword_mod_form extends moodleform_mod {
         
         
         $mform->addElement('header', 'metadata', get_string('metadata', 'sword'));
+
+	$mform->addElement('textarea','abstrac',get_string('abstract','sword'),'wrap="virtual" rows="8" cols="64"');
+	 if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('abstrac', PARAM_TEXT);
+        } else {
+            $mform->setType('abstrac', PARAM_CLEAN);
+        }		
+	$mform->addElement('hidden', 'type', 'software');
+
+
         $mform->addElement('text', 'subject', get_string('subject', 'sword'), array('size'=>'64'));
         
            if (!empty($CFG->formatstringstriptags)) {

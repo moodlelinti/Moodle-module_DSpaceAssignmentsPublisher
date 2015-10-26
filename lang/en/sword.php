@@ -51,6 +51,7 @@ $string['collection']= 'collection';
 $string['username']='Username';
 $string['password']='Password';
 $string['metadata']='Default metadata values';
+$string['abstract']='Abstract';
 $string['subject']='Subject';
 $string['rights']='Rights';
 $string['language']='Language';
