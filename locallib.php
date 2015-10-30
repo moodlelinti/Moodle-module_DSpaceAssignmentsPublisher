@@ -590,7 +590,7 @@ public function view( $action='grading') {
          
          $user=$DB->get_record('user', array('id' => $userid));
          $assignment=$DB->get_record('assign',array('id'=> $assigid ));
-         
+         $course=$DB->get_record('course',array('id'=>$assignment->course));
          
         
         // add context metadata   
@@ -654,11 +654,28 @@ public function view( $action='grading') {
          else{
 		error_log("no se tomo el campo lenguaje del formulario");	
 	}
-         if($sword_metadata->publisher != NULL) {
-            $datos["publisher"]=$sword_metadata->publisher;
+
+	//set the publisher with the course name 
+	  error_log(var_dump($course));
+	  $datos["publisher"]= $course->fullname;
+
+         if($sword_metadata->teacher != NULL) {
+            $datos["teacher"]=$sword_metadata->teacher;
          }
         else{
-		error_log("no se tomo el campo publicador del formulario");	
+		error_log("no se tomo el campo teacher del formulario");	
+	}
+	if($sword_metadata->programminglanguage != NULL) {
+            $datos["programminglanguage"]=$sword_metadata->programminglanguage;
+         }
+        else{
+		error_log("no se tomo el campo programming language del formulario");	
+	}
+	if($sword_metadata->programminglanguage != NULL) {
+            $datos["teachermail"]=$sword_metadata->teachermail;
+         }
+        else{
+		error_log("no se tomo el campo programming language del formulario");	
 	}
              
         $this->makeMets($datos);
@@ -716,8 +733,16 @@ public function view( $action='grading') {
 	if (array_key_exists("publisher",$datos)){
 	   $packager->setPublisher($datos["publisher"]);
 	}
-	
-	
+	/*Uso otros metadatos para pasar los datos temporalmente*/
+	if (array_key_exists("teacher",$datos)){
+	   $packager->setStatusStatement($datos["teacher"]);
+	}
+	if (array_key_exists("teachermail",$datos)){
+	   $packager->setCitation($datos["teachermail"]);
+	}
+	if (array_key_exists("programminglanguage",$datos)){
+	   $packager->setCopyrightHolder($datos["programminglanguage"]);
+	}
 	
     
     }

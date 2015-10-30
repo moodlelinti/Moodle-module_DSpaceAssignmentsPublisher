@@ -34,8 +34,10 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
    $PAGE->requires->js('/mod/sword/js/jquery-ui-1.10.4.custom.min.js', true);
    $PAGE->requires->js('/mod/sword/js/mod_form.js', true);
    $PAGE->requires->css('/mod/sword/css/blitzer/jquery-ui-1.10.4.custom.css', true);
+   $PAGE->requires->js('/mod/sword/lib/selectize/dist/js/standalone/selectize.js',true);
+   $PAGE->requires->js('/mod/sword/js/usingselectize.js',true);
 
-
+   $PAGE->requires->css('/mod/sword/lib/selectize/dist/css/selectize.default.css', true);
    $PAGE->requires->css('/mod/sword/css/mod_form.css', true);
 /**
  * Module instance settings form
@@ -135,7 +137,24 @@ class mod_sword_mod_form extends moodleform_mod {
         } else {
             $mform->setType('subject', PARAM_CLEAN);
         }
+	$options = array(
+    'Ada' => 'Ada',
+    'C' => 'C',
+    'C++' => 'C++',
+    'Java'=> 'Java',
+    'Javascript' => 'Javascript',
+    'Pascal' =>'Pascal',
+    'Php' => 'Php',
+    'Ruby' => 'Ruby'
+);
+        $mform->addElement('select', 'programminglanguage', get_string('programminglanguage', 'sword'), $options);
         
+        
+            if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('programminglanguage', PARAM_TEXT);
+        } else {
+            $mform->setType('programminglanguage', PARAM_CLEAN);
+        }
         $mform->addElement('text', 'rights', get_string('rights', 'sword'), array('size'=>'64'));
         
         
@@ -156,13 +175,22 @@ class mod_sword_mod_form extends moodleform_mod {
         }
         
         
-        $mform->addElement('text', 'publisher', get_string('publisher', 'sword'), array('size'=>'64'));
+        $mform->addElement('text', 'teacher', get_string('teacher', 'sword'), array('size'=>'64'));
         
         
             if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('publisher', PARAM_TEXT);
+            $mform->setType('teacher', PARAM_TEXT);
         } else {
-            $mform->setType('publisher', PARAM_CLEAN);
+            $mform->setType('teacher', PARAM_CLEAN);
+        }
+	
+	$mform->addElement('text', 'teachermail', get_string('teachermail', 'sword'), array('size'=>'64'));
+        
+        
+            if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('teachermail', PARAM_TEXT);
+        } else {
+            $mform->setType('teachermail', PARAM_CLEAN);
         }
 
         //-------------------------------------------------------------------------------

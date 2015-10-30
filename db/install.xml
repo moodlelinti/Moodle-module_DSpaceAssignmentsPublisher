@@ -21,7 +21,10 @@
 	<FIELD NAME="language" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" PREVIOUS="rights" NEXT="publisher"/>
 	<FIELD NAME="publisher" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" PREVIOUS="language" NEXT="timecreated" />	
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="publisher" NEXT="timemodified"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated" NEXT="programminglanguage"/>
+	<FIELD NAME="programminglanguage" TYPE="char" LENGTH="50" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="timemodified" NEXT="teacher"/>
+	<FIELD NAME="teacher" TYPE="char" LENGTH="50" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="programminglanguage" NEXT="teachermail"/>
+	<FIELD NAME="teachermail" TYPE="char" LENGTH="50" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="teacher"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
