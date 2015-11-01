@@ -71,6 +71,10 @@ class PackagerMetsSwap {
     // Number of files added
     public $sac_filecount;
 
+    //DUILIO MODIFIED TO ADD NEW METADATA(NOT PART OF ORIGINAL SWORD API) 
+    public $sac_teacher_name;
+    public $sac_teacher_mail;
+    public $sac_programming_language;
 
     function __construct($sac_rootin, $sac_dirin, $sac_rootout, $sac_fileout) {
         // Store the values
@@ -86,7 +90,15 @@ class PackagerMetsSwap {
         $this->sac_rights = array();
         $this->sac_filecount = 0;
     }
-
+    function setTeacherName($tn){
+	$this->sac_teacher_name = $tn;
+    }
+    function setTeacherMail($tm){
+	$this->sac_teacher_mail = $tm;
+    }
+    function setProgrammingLanguage($pl){
+	$this->sac_programming_language = $pl;
+    }
     function setType($sac_thetype) {
         $this->sac_type = $sac_thetype;
     }
@@ -222,7 +234,21 @@ class PackagerMetsSwap {
         fwrite($fh, "<xmlData>\n");
         fwrite($fh, "<epdcx:descriptionSet xmlns:epdcx=\"http://purl.org/eprint/epdcx/2006-11-16/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://purl.org/eprint/epdcx/2006-11-16/ http://purl.org/eprint/epdcx/xsd/2006-11-16/epdcx.xsd\">\n");
         fwrite($fh, "<epdcx:description epdcx:resourceId=\"sword-mets-epdcx-1\">\n");
-
+	
+	/*DUILIO MODIFIED, WRITE CUSTOM METADA IN DOCUMENT
+	THOSE ARE TEACHER-NAME TEACHER-MAIL AND PROGRAMMING-LANGAUGE*/
+	if  (isset($this->sac_teacher_name)){
+	    $this->statement($fh,
+			     "TEACHER-NAME",$this->valueString($this->sac_teacher_name) );
+	}
+	if  (isset($this->sac_teacher_mail)){
+	    $this->statement($fh,
+			     "TEACHER-MAIL",$this->valueString($this->sac_teacher_mail) );
+	}	
+	if  (isset($this->sac_programming_language)){
+	    $this->statement($fh,
+		"PROGRAMMING-LANGUAGE",$this->valueString($this->sac_programming_language) );
+	}
         if (isset($this->sac_type)) {
             $this->statementVesURIValueURI($fh, 
                                            "http://purl.org/dc/elements/1.1/type",
