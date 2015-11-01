@@ -656,7 +656,7 @@ public function view( $action='grading') {
 	}
 
 	//set the publisher with the course name 
-	  error_log(var_dump($course));
+	  //error_log(var_dump($course));
 	  $datos["publisher"]= $course->fullname;
 
          if($sword_metadata->teacher != NULL) {
@@ -733,15 +733,15 @@ public function view( $action='grading') {
 	if (array_key_exists("publisher",$datos)){
 	   $packager->setPublisher($datos["publisher"]);
 	}
-	/*Uso otros metadatos para pasar los datos temporalmente*/
+	/*USO campos especiales para los metadatos propios*/
 	if (array_key_exists("teacher",$datos)){
-	   $packager->setStatusStatement($datos["teacher"]);
+	   $packager->setTeacherName($datos["teacher"]);
 	}
 	if (array_key_exists("teachermail",$datos)){
-	   $packager->setCitation($datos["teachermail"]);
+	   $packager->setTeacherMail($datos["teachermail"]);
 	}
 	if (array_key_exists("programminglanguage",$datos)){
-	   $packager->setCopyrightHolder($datos["programminglanguage"]);
+	   $packager->setProgrammingLanguage($datos["programminglanguage"]);
 	}
 	
     
@@ -804,7 +804,7 @@ public function view( $action='grading') {
 		    $error = false;
 		    try{
 		        $sac = new SWORDAPPClient();
-			error_log(var_dump($package));
+			//error_log(var_dump($package));
 		        $dr = $sac->deposit($url, $user, $pw, '', $package, $packageformat,$contenttype, false);
 		        //error_log($dr);
 		   	
