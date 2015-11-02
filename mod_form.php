@@ -138,19 +138,28 @@ class mod_sword_mod_form extends moodleform_mod {
             $mform->setType('subject', PARAM_CLEAN);
         }
 	$options = array(
+	'.NET'=> '.NET',
     'Ada' => 'Ada',
+	'Assembly language' => 'Assembly language',
     'C' => 'C',
+	'C#' => 'C#',	
     'C++' => 'C++',
+	'Delphi' =>'Delphi',
     'Java'=> 'Java',
-    'Javascript' => 'Javascript',
+    'JavaScript' => 'JavaScript',
+	'Objective-C'=>'Objective-C',
     'Pascal' =>'Pascal',
-    'Php' => 'Php',
-    'Ruby' => 'Ruby'
+	'Perl' => 'Perl',
+    'PHP' => 'PHP',
+    'Pyton' => 'Pyton',
+    'Ruby' => 'Ruby',
+	'Swift' => 'Swift', 
+	'Visual Basic' => 'Visual Basic'
 );
         $mform->addElement('select', 'programminglanguage', get_string('programminglanguage', 'sword'), $options);
         
         
-            if (!empty($CFG->formatstringstriptags)) {
+        if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('programminglanguage', PARAM_TEXT);
         } else {
             $mform->setType('programminglanguage', PARAM_CLEAN);
