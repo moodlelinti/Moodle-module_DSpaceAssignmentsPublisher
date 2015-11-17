@@ -793,10 +793,11 @@ public function view( $action='grading') {
 		    */
 
 		    /*guardo una copia del paquete a enviar antes de realizar el envio*/
-		    if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
+		    /* Lo dejo comentado ya que solo me guardo una copia en desarollo
+			if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
     				error_log("no se pudo guardar una copia del envio");
 			}
-			
+			*/	
 		    require_once($CFG->dirroot .'/mod/sword/api/swordappclient.php');
 		    
 		    
