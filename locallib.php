@@ -518,13 +518,55 @@ public function view( $action='grading') {
                               if ($file instanceof stored_file) { 
 				  
 				  $filetitle=$file->get_filename();
-				  
+                  // $aux= $this->handleLine("hola;comoestas");
+		
 				  $newstring = substr($filetitle, -3);
-				  if($newstring=="txt"){
+                  if($newstring=="txt"){
 				    $contents = $file->get_content();
-				      $arr[] = explode("\n", $contents);                
+                    $arr[] = explode("\n", $contents);                
 				  }
+
+
+                    /*
+                    PARA VER LOS CODIGOS   PRUEBA
+                    " " (ASCII 32 (0x20)), espacio simple.
+                    "\t" (ASCII 9 (0x09)), tabulación.
+                    "\n" (ASCII 10 (0x0A)), salto de línea.
+                    "\r" (ASCII 13 (0x0D)), retorno de carro.
+                    "\0" (ASCII 0 (0x00)), el byte NUL.
+                    "\x0B" (ASCII 11 (0x0B)), tabulación vertical.
+                    */
+
+               if($filetitle =="autores.txt"){
+                    $contents2 = $file->get_content();
+                    
+                    error_log($contents2);
+                    error_log("PARA SEPARAR (ARRIBA el contenido recien leido, ABAJO el contenido impreso del arreglo)");
+                    /*llamo a la funcion detectEOLTypes para obtener el caracter que divide el string por lineas y usarlo en el explode*/
+                 $arr2 = explode($this->detectEOLType($contents2), $contents2); 
+                    
+                    $arr3 = array();
+                    for ($i=0;$i<count($arr2);$i++)  
+                    {
+			$esLineaValida=true;
+                        $st = $this-> handleLine($arr2[$i],$esLineaValida); // Llama a la funcion, retorna un arreglo con $st[0] Nombre y $st[1] correoElecctronico, si la linea no esta vacia /
+			if($esLineaValida){                        
+				array_push($arr3, $st); // Guarda el arreglo $st en el arreglo $arr3 //
+                    	}
+		    }
+
+                    /*for ($i=0;$i<count($arr3);$i++) // Prueba  Imprimir // 
+                    {
+			$st=$arr3[$i];
+                        for ($j=0;$j<count($st);$j++)  
+                        {
+                            error_log( $st[$j]);
+                        }
+                    }*/
+                    
+                }
 					    
+
 				  $this->copyFileToTemp($file);
 				  
 				  $filesdata[] = array (
@@ -793,11 +835,10 @@ public function view( $action='grading') {
 		    */
 
 		    /*guardo una copia del paquete a enviar antes de realizar el envio*/
-		    /* Lo dejo comentado ya que solo me guardo una copia en desarollo
-			if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
+		    if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
     				error_log("no se pudo guardar una copia del envio");
 			}
-			*/	
+			
 		    require_once($CFG->dirroot .'/mod/sword/api/swordappclient.php');
 		    
 		    
@@ -861,6 +902,31 @@ public function view( $action='grading') {
      
       file_put_contents($this->output_directory .$filename,$content);
     }
+
+
+
+
+    private  function handleLine($string,$estado) {
+            //funcion que maneja una linea del archivo dividiendo por ; el nombre del correo_electronico
+            //error_log("llegue a la function");
+	    if((strlen($string)>3)&&(strpos($string,';')!=false)){
+            	return explode(";", $string);
+		}
+	    else{
+		$estado= false;
+		return false;		
+		}
+       }
+    private function detectEOLType($string){
+	//http://stackoverflow.com/questions/11066857/detect-eol-type-using-php
+	//funcion que devuelve el caracter que identifica el caracter utilizado como fin de linea en el string
+	$eols = array_count_values(str_split(preg_replace("/[^\r\n]/", "", $string)));
+  	$eola = array_keys($eols, max($eols));
+ 	$eol = implode("", $eola);
+	error_log("fin de linea".$eol);
+	return $eol;
+	}
+    
     
     
 
