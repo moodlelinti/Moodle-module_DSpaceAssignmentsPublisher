@@ -536,40 +536,40 @@ public function view( $action='grading') {
                     "\0" (ASCII 0 (0x00)), el byte NUL.
                     "\x0B" (ASCII 11 (0x0B)), tabulación vertical.
                     */
-
+								
                if($filetitle =="autores.txt"){
                     $contents2 = $file->get_content();
+                    $eolchar = $this->detectEOLType($contents2);
+										
+										$contents2= preg_replace("/(^[$eolchar]*|[$eolchar]+)[\s\t]*[\r\n]+/", "\n", $contents2);//elimino lineas vacias
                     
-                    error_log($contents2);
-                    error_log("PARA SEPARAR (ARRIBA el contenido recien leido, ABAJO el contenido impreso del arreglo)");
-                    /*llamo a la funcion detectEOLTypes para obtener el caracter que divide el string por lineas y usarlo en el explode*/
-                 $arr2 = explode($this->detectEOLType($contents2), $contents2); 
-                    
-                    $arr3 = array();
+                 		$arr2 = explode($eolchar, $contents2); /*llamo a la funcion detectEOLTypes para obtener el caracter que divide el string por lineas y usarlo en el explode*/
+										$arr2=$this->remove_empty_slots($arr2);
+									
+                    $all_authors = array();
                     for ($i=0;$i<count($arr2);$i++)  
                     {
-			$esLineaValida=true;
+												$esLineaValida=true;
                         $st = $this-> handleLine($arr2[$i],$esLineaValida); // Llama a la funcion, retorna un arreglo con $st[0] Nombre y $st[1] correoElecctronico, si la linea no esta vacia /
-			if($esLineaValida){                        
-				array_push($arr3, $st); // Guarda el arreglo $st en el arreglo $arr3 //
+												if($esLineaValida){                        
+													array_push($all_authors, $st); // Guarda el arreglo $st en el arreglo $arr3 //
                     	}
-		    }
-
-                    /*for ($i=0;$i<count($arr3);$i++) // Prueba  Imprimir // 
+		    						}
+                   /*for ($i=0;$i<count($all_authors);$i++) // Prueba  Imprimir // 
                     {
-			$st=$arr3[$i];
+												$st=$all_authors[$i];
                         for ($j=0;$j<count($st);$j++)  
                         {
-                            error_log( $st[$j]);
+                            error_log("hola que tal ". $st[$j]);
                         }
                     }*/
-                    
+                    continue;
                 }
 					    
 
-				  $this->copyFileToTemp($file);
+				  		$this->copyFileToTemp($file);
 				  
-				  $filesdata[] = array (
+				 			$filesdata[] = array (
 	                                   "filename" => $file->get_filename(),	    
 	                                   "mimetype" => $file->get_mimetype(),
 	                          );				  
@@ -588,7 +588,7 @@ public function view( $action='grading') {
                     
                 }
            
-                $paquete = $this->makePackage($filesdata, $sword_metadata, $arr, $userid, $this->get_instance()->id);
+                $paquete = $this->makePackage($filesdata, $sword_metadata, $arr,$all_authors, $userid, $this->get_instance()->id);
                 
                  
                  $resultado  = $this->sendToRepository($paquete,$submission->id, $sword_metadata);
@@ -624,7 +624,7 @@ public function view( $action='grading') {
      * $rootout is The location to write the package out to
      * $fileout is The filename to save the package as
      */
-     private function makePackage($filesdata, $sword_metadata, $arr, $userid,$assigid ) 
+     private function makePackage($filesdata, $sword_metadata, $arr,$all_authors, $userid,$assigid ) 
      {
         
         global $CFG,$DB;
@@ -720,7 +720,7 @@ public function view( $action='grading') {
 		error_log("no se tomo el campo programming language del formulario");	
 	}
              
-        $this->makeMets($datos);
+        $this->makeMets($datos, $all_authors);
           
         return $datos["rootout"].$datos["fileout"];
      }
@@ -728,23 +728,29 @@ public function view( $action='grading') {
     /**
     * make METS package
     **/
-    private function makeMets($datos) 
+    private function makeMets($datos,$authors) 
     {
-        $packager = new PackagerMetsSwap($datos["rootin"], $datos["dirin"], $datos["rootout"], $datos["fileout"]);
-        
-        $this->loadMetadata($packager, $datos);
-	$packager->create();
+			$packager = new PackagerMetsSwap($datos["rootin"], $datos["dirin"], $datos["rootout"], $datos["fileout"]);
+      $this->loadMetadata($packager, $datos, $authors);
+			$packager->create();
     }
     
     /**
     * cargar metadatos en el mets.xml
     **/
-    private function loadMetadata($packager, $datos)
+    private function loadMetadata($packager, $datos, $authors)
     {
     
-        foreach($datos["files"] as $file) {
-           $packager->addFile($file["filename"], $file["mimetype"]);
-        }
+		/*Modifico para agregar todos los autores y mails de autores que se reciben en el arreglo authors*/
+		$i;
+		for($i=0; $i < count($authors); $i++){
+			$aux=$authors[$i];
+      $packager->addCreator($aux[0]);
+	  	$packager->addMailCreator($aux[1]);
+		}
+    foreach($datos["files"] as $file) {
+      $packager->addFile($file["filename"], $file["mimetype"]);
+    }
 
 	$packager->setTitle($datos["title"]);
 	$packager->addCreator($datos["author"]);
@@ -920,11 +926,21 @@ public function view( $action='grading') {
     private function detectEOLType($string){
 	//http://stackoverflow.com/questions/11066857/detect-eol-type-using-php
 	//funcion que devuelve el caracter que identifica el caracter utilizado como fin de linea en el string
-	$eols = array_count_values(str_split(preg_replace("/[^\r\n]/", "", $string)));
+		$eols = array_count_values(str_split(preg_replace("/[^\r\n]/", "", $string)));
   	$eola = array_keys($eols, max($eols));
- 	$eol = implode("", $eola);
-	error_log("fin de linea".$eol);
-	return $eol;
+ 		$eol = implode("", $eola);
+		return $eol;
+	}
+	private function remove_empty_slots($arr2){
+			for($i= 0; $i < count($arr2);$i++){
+					$aux=$arr2[$i];
+					if(empty($aux)||$aux==""){
+								unset($arr2[$i]);					
+						}			
+			}
+			//var_dump($arr2);
+			$arr2= array_values($arr2);
+			return $arr2;
 	}
     
     

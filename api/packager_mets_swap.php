@@ -75,6 +75,7 @@ class PackagerMetsSwap {
     public $sac_teacher_name;
     public $sac_teacher_mail;
     public $sac_programming_language;
+		public $sac_creators_mails;
 
     function __construct($sac_rootin, $sac_dirin, $sac_rootout, $sac_fileout) {
         // Store the values
@@ -89,6 +90,7 @@ class PackagerMetsSwap {
         $this->sac_provenances = array();
         $this->sac_rights = array();
         $this->sac_filecount = 0;
+				$this->sac_creators_mails=array();
     }
     function setTeacherName($tn){
 	$this->sac_teacher_name = $tn;
@@ -110,6 +112,9 @@ class PackagerMetsSwap {
     function setAbstract($sac_thetitle) {
         $this->sac_abstract = $this->clean($sac_thetitle);
     }
+		function addMailCreator($sac_mail_creator){
+			  array_push($this->sac_creators_mails, $this->clean($sac_mail_creator));
+		}
 
     function addCreator($sac_creator) {
         array_push($this->sac_creators, $this->clean($sac_creator));
@@ -236,7 +241,7 @@ class PackagerMetsSwap {
         fwrite($fh, "<epdcx:description epdcx:resourceId=\"sword-mets-epdcx-1\">\n");
 	
 	/*DUILIO MODIFIED, WRITE CUSTOM METADA IN DOCUMENT
-	THOSE ARE TEACHER-NAME TEACHER-MAIL AND PROGRAMMING-LANGAUGE*/
+	THOSE ARE TEACHER-NAME TEACHER-MAIL AND PROGRAMMING-LANGAUGE AND MAIL OF CREATORS*/
 	if  (isset($this->sac_teacher_name)){
 	    $this->statement($fh,
 			     "TEACHER-NAME",$this->valueString($this->sac_teacher_name) );
@@ -254,6 +259,11 @@ class PackagerMetsSwap {
                                            "http://purl.org/dc/elements/1.1/type",
                                            "http://purl.org/eprint/terms/Type",
                                            $this->sac_type);
+        }
+				foreach ($this->sac_creators_mails as $sac_creator_mail) {
+            $this->statement($fh,
+                             "http://purl.org/dc/elements/1.1/creator_mail",
+                             $this->valueString($sac_creator_mail));
         }
 
         if (isset($this->sac_title)) {
