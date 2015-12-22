@@ -2,6 +2,10 @@
 require_once("../../config.php");
 require_once("lib.php");
 require_once($CFG->libdir.'/weblib.php');
+function sec_print($s) {
+ return htmlspecialchars(strip_tags($s), ENT_QUOTES, 'utf-8');
+}
+
 function remoteFileExists($url) {
     //error_log("URL en cuestion ".$url);
     $curl = curl_init($url);
@@ -31,42 +35,84 @@ function remoteFileExists($url) {
     */
 		return $ret;
 }
-try {
+/*funcion por si se vuelve a usar campo de texto para la URL*/
+function isValidURL($url){
+	$slicedURL= parse_url($url);
+	foreach($slicedURL as $k=> $v){
+		error_log($k. "     ".$v);
+	}
+	if(!isset($slicedURL["host"])){
+		if($slicedURL["path"]=="dspace-dev.linti.unlp.edu.ar"){
+			return true;
+		}
+	}
+	else{
+		if(($slicedURL["host"]=="dspace-dev.linti.unlp.edu.ar")&&(!isset($slicedURL["path"]))){
+			return true;
+		}
+		else{
+				if(isset($slicedURL["path"])){
+					if($slicedURL["path"]=="/"){return true;}
+				}
+		}
+	}
 
-// Moodle_URL valida la dirección y extrae las partes
-
-$url = new moodle_url($_POST["url"] . '/rest/collections/');
-//error_log("mi url es:".$_POST["url"]);
-/*$pad='';
- foreach ($_POST as $key => $value){
-        error_log ($pad . "$key => $value");  
-    } */
-$url->remove_all_params();
-//Valido que la dirección termine con /rest/collections
-if (substr($url->get_path(true), -18,18) == '/rest/collections/') {
-  //error_log("llegue a que la url termina en rest collections");
-  //if (remoteFileExists($url->get_path(true))) {
-    if (remoteFileExists($url)) {
-     /*ACA SE ROMPIA, cambie la llamada del if
-	http://dspace-dev.linti.unlp.edu.ar/rest/collections*/
-     error_log("verifique que la URL existe");  
-     //Si la URL existe hago la petición
-     //$ch = curl_init($url->get_path(true));
-     $ch = curl_init($url);
-     //remplaze para que se hiciera la peticion con la URL entera
-     curl_setopt($ch, CURLOPT_HEADER, 0);
-     $output = curl_exec($ch);
-     curl_close($ch);
-
-     //Decodifico y me aseguro que sea un JSON válido
-     $ret = json_encode($output);     
-     if ($ret != null ) {       
-       return $ret;       
-     } 
-  }
+	if(!isset($slicedURL["host"])){
+		if($slicedURL["path"]=="repositorio.info.unlp.edu.ar"){
+			return true;
+		}
+	}
+	else{
+		if(($slicedURL["host"]=="repositorio.info.unlp.edu.ar")&&(!isset($slicedURL["path"]))){
+			return true;
+		}
+		else{
+				if($slicedURL["path"]=="/"){return true;}
+		}
+	}
+	error_log("URL INVALIDA");
+	return false;
 }
-return false;
-} catch (Exception $e) {
- return false;
+function get_URL($url){
+	if($url=='1'){return "repositorio.info.unlp.edu.ar";}
+	if($url=='2'){return "dspace-dev.linti.unlp.edu.ar";}
+	return "urlinvalida";	
+}
+try {
+if(isloggedin()){
+	// Moodle_URL valida la dirección y extrae las partes
+	error_log("grande duilio". $_POST["url"]);
+	if(get_URL($_POST["url"])!="urlinvalida"){
+		$url = new moodle_url(get_URL($_POST["url"]) . '/rest/collections/');
+		error_log("mi url es:".$url);
+		/*$pad='';
+		foreach ($_POST as $key => $value){		      
+			error_log ($pad . "$key => $value");  
+				 } */
+		$url->remove_all_params();
+		//Valido que la dirección termine con /rest/collections
+		if (substr($url->get_path(true), -18,18) == '/rest/collections/') {
+			//if (remoteFileExists($url->get_path(true))) {
+					if (remoteFileExists($url)) {
+					 error_log("verifique que la URL existe");  
+					 //Si la URL existe hago la petición
+					 $ch = curl_init($url);
+					 //remplaze para que se hiciera la peticion con la URL entera				 
+					 curl_setopt($ch, CURLOPT_HEADER, 0);
+					 $output = curl_exec($ch);
+					 curl_close($ch);
+
+					 //Decodifico y me aseguro que sea un JSON válido	
+					 $ret = sec_print(json_encode($output));     
+					 if ($ret != null ) {       
+							 return $ret;       
+						} 
+					}
+			}
+		}
+		return false;
+}	} catch (Exception $e) {
+	 return false;
+
 }
 

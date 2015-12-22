@@ -518,57 +518,16 @@ public function view( $action='grading') {
                               if ($file instanceof stored_file) { 
 				  
 				  $filetitle=$file->get_filename();
-                  // $aux= $this->handleLine("hola;comoestas");
-		
-				  $newstring = substr($filetitle, -3);
-                  if($newstring=="txt"){
-				    $contents = $file->get_content();
-                    $arr[] = explode("\n", $contents);                
-				  }
-
-
-                    /*
-                    PARA VER LOS CODIGOS   PRUEBA
-                    " " (ASCII 32 (0x20)), espacio simple.
-                    "\t" (ASCII 9 (0x09)), tabulación.
-                    "\n" (ASCII 10 (0x0A)), salto de línea.
-                    "\r" (ASCII 13 (0x0D)), retorno de carro.
-                    "\0" (ASCII 0 (0x00)), el byte NUL.
-                    "\x0B" (ASCII 11 (0x0B)), tabulación vertical.
-                    */
-								
-               if($filetitle =="autores.txt"){
-                    $contents2 = $file->get_content();
-                    $eolchar = $this->detectEOLType($contents2);
-										error_log(var_dump($eolchar));
-                    
-                 		$arr2 = explode("\r\n", $contents2); /*llamo a la funcion detectEOLTypes para obtener el caracter que divide el string por lineas y usarlo en el explode*/
-										$arr2=$this->remove_empty_slots($arr2);
-									
-                    $all_authors = array();
-                    for ($i=0;$i<count($arr2);$i++)  
-                    {
-												$esLineaValida=true;
-                        $st = $this-> handleLine($arr2[$i],$esLineaValida); // Llama a la funcion, retorna un arreglo con $st[0] Nombre y $st[1] correoElecctronico, si la linea no esta vacia /
-												if($esLineaValida){                        
-													array_push($all_authors, $st); // Guarda el arreglo $st en el arreglo $arr3 //
-                    	}
-		    						}
-                   for ($i=0;$i<count($all_authors);$i++) // Prueba  Imprimir // 
-                    {
-												$st=$all_authors[$i];
-                        for ($j=0;$j<count($st);$j++)  
-                        {
-                            error_log("H:".$i ." ".$j. $st[$j]);
-                        }
-                    }
-                    continue;
-                }
-					    
-
-				  		$this->copyFileToTemp($file);
 				  
-				 			$filesdata[] = array (
+				  $newstring = substr($filetitle, -3);
+				  if($newstring=="txt"){
+				    $contents = $file->get_content();
+				      $arr[] = explode("\n", $contents);                
+				  }
+					    
+				  $this->copyFileToTemp($file);
+				  
+				  $filesdata[] = array (
 	                                   "filename" => $file->get_filename(),	    
 	                                   "mimetype" => $file->get_mimetype(),
 	                          );				  
@@ -587,7 +546,7 @@ public function view( $action='grading') {
                     
                 }
            
-                $paquete = $this->makePackage($filesdata, $sword_metadata, $arr,$all_authors, $userid, $this->get_instance()->id);
+                $paquete = $this->makePackage($filesdata, $sword_metadata, $arr, $userid, $this->get_instance()->id);
                 
                  
                  $resultado  = $this->sendToRepository($paquete,$submission->id, $sword_metadata);
@@ -623,7 +582,7 @@ public function view( $action='grading') {
      * $rootout is The location to write the package out to
      * $fileout is The filename to save the package as
      */
-     private function makePackage($filesdata, $sword_metadata, $arr,$all_authors, $userid,$assigid ) 
+     private function makePackage($filesdata, $sword_metadata, $arr, $userid,$assigid ) 
      {
         
         global $CFG,$DB;
@@ -719,7 +678,7 @@ public function view( $action='grading') {
 		error_log("no se tomo el campo programming language del formulario");	
 	}
              
-        $this->makeMets($datos, $all_authors);
+        $this->makeMets($datos);
           
         return $datos["rootout"].$datos["fileout"];
      }
@@ -727,29 +686,23 @@ public function view( $action='grading') {
     /**
     * make METS package
     **/
-    private function makeMets($datos,$authors) 
+    private function makeMets($datos) 
     {
-			$packager = new PackagerMetsSwap($datos["rootin"], $datos["dirin"], $datos["rootout"], $datos["fileout"]);
-      $this->loadMetadata($packager, $datos, $authors);
-			$packager->create();
+        $packager = new PackagerMetsSwap($datos["rootin"], $datos["dirin"], $datos["rootout"], $datos["fileout"]);
+        
+        $this->loadMetadata($packager, $datos);
+	$packager->create();
     }
     
     /**
     * cargar metadatos en el mets.xml
     **/
-    private function loadMetadata($packager, $datos, $authors)
+    private function loadMetadata($packager, $datos)
     {
     
-		/*Modifico para agregar todos los autores y mails de autores que se reciben en el arreglo authors*/
-		$i;
-		for($i=0; $i < count($authors); $i++){
-			$aux=$authors[$i];
-      $packager->addCreator($aux[0]);
-	  	$packager->addMailCreator($aux[1]);
-		}
-    foreach($datos["files"] as $file) {
-      $packager->addFile($file["filename"], $file["mimetype"]);
-    }
+        foreach($datos["files"] as $file) {
+           $packager->addFile($file["filename"], $file["mimetype"]);
+        }
 
 	$packager->setTitle($datos["title"]);
 	$packager->addCreator($datos["author"]);
@@ -840,10 +793,11 @@ public function view( $action='grading') {
 		    */
 
 		    /*guardo una copia del paquete a enviar antes de realizar el envio*/
-		    if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
+		    /* Lo dejo comentado ya que solo me guardo una copia en desarollo
+			if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
     				error_log("no se pudo guardar una copia del envio");
 			}
-			
+			*/	
 		    require_once($CFG->dirroot .'/mod/sword/api/swordappclient.php');
 		    
 		    
@@ -907,46 +861,6 @@ public function view( $action='grading') {
      
       file_put_contents($this->output_directory .$filename,$content);
     }
-
-
-
-
-    private  function handleLine($string,$estado) {
-            //funcion que maneja una linea del archivo dividiendo por ; el nombre del correo_electronico
-            //error_log("llegue a la function");
-	    if((strlen($string)>3)&&(strpos($string,';')!=false)){
-            	return explode(";", $string);
-		}
-	    else{
-		$estado= false;
-		return false;		
-		}
-       }
-    private function detectEOLType($string){
-	//http://stackoverflow.com/questions/11066857/detect-eol-type-using-php
-	//funcion que devuelve el caracter que identifica el caracter utilizado como fin de linea en el string
-	/*	
-		return $eol;
-	*/
-    $eols = array_count_values(str_split(preg_replace("/[^\r\n]/", "", $string)));
-    $eola = array_keys($eols, max($eols));
-    $eol = implode("", $eola);
-    $bool1= strpos("\r\n",$string != 0);
-    if($bool1){return  "\r\n";}
-    else{return $eol;}
-    }
-	private function remove_empty_slots($arr2){
-			for($i= 0; $i < count($arr2);$i++){
-					$aux=$arr2[$i];
-					if(empty($aux)||$aux==""){
-								unset($arr2[$i]);					
-						}			
-			}
-			//var_dump($arr2);
-			$arr2= array_values($arr2);
-			return $arr2;
-	}
-    
     
     
 

@@ -79,8 +79,14 @@ class mod_sword_mod_form extends moodleform_mod {
          $mform->addElement('html', '<h3>' . get_string("search_collection","sword") . "</h3>");
          
          $mform->addElement('html', '<div>');
-        $mform->addElement('text', 'base_url', get_string('repositoryurl', 'sword'), array('size'=>'50'));
-         $mform->setType('base_url', PARAM_CLEAN);
+        //$mform->addElement('text', 'base_url', get_string('repositoryurl', 'sword'), array('size'=>'50'));
+				$REPOS = array(
+    		'1' => 'Repositorio Facultad Informatica',
+    		'2' => 'Desarrollo'
+				);
+				$select = $mform->addElement('select', 'base_url', get_string('repositoryurl','sword'), $REPOS);
+				$select->setSelected('2');         
+				//$mform->setType('base_url', PARAM_CLEAN);
         
         $mform->addElement('button', 'find', get_string("search"), array('onclick' => 'getCollections(null)'));
         $mform->setType('find', PARAM_CLEAN);

@@ -45,7 +45,7 @@ Funciona para los módulos Tareas y Tareas 2.2, y publica todo tipo de entrega';
 $string['nosend']='No enviado'; 
 $string['send']='Enviado';
 $string['error']='Error al enviar'; 
-$string['repositoryurl'] = 'Ingrese url del repositorio';
+$string['repositoryurl'] = 'Seleccione el repositorio';
 $string['repository']='Información del repositorio ';
 $string['username']='Nombre de Usuario';
 $string['password']='Contraseña';

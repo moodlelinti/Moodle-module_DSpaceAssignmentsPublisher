@@ -53,7 +53,7 @@ $(document).ready( function() {
   var url = $('input[name="url"]').val();
   if (url != "") {
      var pathArray =  url.split("/sword/deposit/" );
-     $("#id_base_url").val(pathArray[0]); 
+     //$("#id_base_url").val(pathArray[0]); 
      getCollections(pathArray[1]);
      
      
