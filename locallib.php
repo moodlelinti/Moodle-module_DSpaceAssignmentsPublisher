@@ -539,7 +539,6 @@ public function view( $action='grading') {
                if($filetitle =="autores.txt"){
                     $contents2 = $file->get_content();
                     $eolchar = $this->detectEOLType($contents2);
-										//error_log(var_dump($eolchar));
                     if(strpos($contents2,"\r\n") !== false){
                  			$arr2 = explode("\r\n", $contents2); /*llamo a la funcion detectEOLTypes para obtener el caracter que divide el string por lineas y usarlo en el explode*/
 										}else{
@@ -555,14 +554,6 @@ public function view( $action='grading') {
 													array_push($all_authors, $st); // Guarda el arreglo $st en el arreglo $arr3 //
                     	}
 		    						}
-                   /*for ($i=0;$i<count($all_authors);$i++) // Prueba  Imprimir // 
-                    {
-												$st=$all_authors[$i];
-                        for ($j=0;$j<count($st);$j++)  
-                        {
-                            error_log("H:".$i ." ".$j. $st[$j]);
-                        }
-                    }*/
                     continue;
                 }
 					    
@@ -745,8 +736,6 @@ public function view( $action='grading') {
 		$i;
 		for($i=0; $i < count($authors); $i++){
 			$aux=$authors[$i];
-			error_log("creator".gettype($aux[0])."mailllllllllll ".gettype($aux[1]));			
-			error_log("creatorValor". $aux[0] ."mailllllllllllValor ".$aux[1]);
 			if(!empty($aux[0])){
 				if(isset($aux[0])){
       		$packager->addCreator($aux[0]);
@@ -754,7 +743,8 @@ public function view( $action='grading') {
 			}
 			
 			if(!empty($aux[1])){			
-				if(isset($aux[1])){error_log("mailllllllllll ".gettype($aux[1]));	  		$packager->addMailCreator($aux[1]);
+				if(isset($aux[1])){
+					$packager->addMailCreator($aux[1]);
 			}
 			}
 		}
@@ -851,8 +841,8 @@ public function view( $action='grading') {
 		    */
 
 		    /*guardo una copia del paquete a enviar antes de realizar el envio*/
-		    if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
-    				error_log("no se pudo guardar una copia del envio");
+		    /*if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
+    				error_log("no se pudo guardar una copia del envio");*/
 			}
 			
 		    require_once($CFG->dirroot .'/mod/sword/api/swordappclient.php');
@@ -862,7 +852,6 @@ public function view( $action='grading') {
 		    $error = false;
 		    try{
 		        $sac = new SWORDAPPClient();
-						error_log(" envio a ".$url);
 		        $dr = $sac->deposit($url, $user, $pw, '', $package, $packageformat,$contenttype, false);
 		        //error_log($dr);
 		   	

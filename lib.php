@@ -66,14 +66,22 @@ function sword_supports($feature) {
  * @param mod_sword_mod_form $mform
  * @return int The id of the newly inserted sword record
  */
+function convert($array){
+		$aux='';$i;
+		for($i=0; $i < count($array);$i++){
+			$aux.= " ".$array[$i];
+		}
+		return $aux;
+}
 function sword_add_instance(stdClass $sword, mod_sword_mod_form $mform = null) {
     global $DB;
 
     $sword->timecreated = time();
 
     # You may have to add extra stuff in here #
-
-    return $DB->insert_record('sword', $sword);
+		$sword->programminglanguage= convert($sword->programminglanguage);
+		    
+		return $DB->insert_record('sword', $sword);
 }
 
 /**
@@ -92,6 +100,7 @@ function sword_update_instance(stdClass $sword, mod_sword_mod_form $mform = null
 
     $sword->timemodified = time();
     $sword->id = $sword->instance;
+		$sword->programminglanguage= convert($sword->programminglanguage);
 
     # You may have to add extra stuff in here #
 
