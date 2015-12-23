@@ -113,10 +113,12 @@ class PackagerMetsSwap {
         $this->sac_abstract = $this->clean($sac_thetitle);
     }
 		function addMailCreator($sac_mail_creator){
-			  array_push($this->sac_creators_mails, $this->clean($sac_mail_creator));
+					error_log($sac_mail_creator);
+			  	array_push($this->sac_creators_mails, $this->clean($sac_mail_creator));
 		}
 
     function addCreator($sac_creator) {
+				error_log($sac_creator);
         array_push($this->sac_creators, $this->clean($sac_creator));
     }
 

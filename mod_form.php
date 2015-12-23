@@ -34,8 +34,8 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
    $PAGE->requires->js('/mod/sword/js/jquery-ui-1.10.4.custom.min.js', true);
    $PAGE->requires->js('/mod/sword/js/mod_form.js', true);
    $PAGE->requires->css('/mod/sword/css/blitzer/jquery-ui-1.10.4.custom.css', true);
-   $PAGE->requires->js('/mod/sword/lib/selectize/dist/js/standalone/selectize.js',true);
-   $PAGE->requires->js('/mod/sword/js/usingselectize.js',true);
+   //$PAGE->requires->js('/mod/sword/lib/selectize/dist/js/standalone/selectize.js',true);
+   //$PAGE->requires->js('/mod/sword/js/usingselectize.js',true);
 
    $PAGE->requires->css('/mod/sword/lib/selectize/dist/css/selectize.default.css', true);
    $PAGE->requires->css('/mod/sword/css/mod_form.css', true);
@@ -162,8 +162,9 @@ class mod_sword_mod_form extends moodleform_mod {
 	'Swift' => 'Swift', 
 	'Visual Basic' => 'Visual Basic'
 );
-        $mform->addElement('select', 'programminglanguage', get_string('programminglanguage', 'sword'), $options);
+        $select2=$mform->addElement('select', 'programminglanguage', get_string('programminglanguage', 'sword'), $options);
         
+				$select2->setMultiple(true);
         
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('programminglanguage', PARAM_TEXT);

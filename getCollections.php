@@ -2,8 +2,9 @@
 require_once("../../config.php");
 require_once("lib.php");
 require_once($CFG->libdir.'/weblib.php');
+
 function sec_print($s) {
- return htmlspecialchars(strip_tags($s), ENT_QUOTES, 'utf-8');
+ return htmlspecialchars(strip_tags($s), ENT_QUOTES);
 }
 
 function remoteFileExists($url) {

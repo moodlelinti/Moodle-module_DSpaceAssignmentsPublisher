@@ -69,7 +69,6 @@ class sword_assign extends assign {
      $this->feedbackplugins = $this->load_plugins('assignfeedback');
   }
 
-
 public function view( $action='grading') {
       
         $o = '';
@@ -540,11 +539,13 @@ public function view( $action='grading') {
                if($filetitle =="autores.txt"){
                     $contents2 = $file->get_content();
                     $eolchar = $this->detectEOLType($contents2);
-										error_log(var_dump($eolchar));
-                    
-                 		$arr2 = explode("\r\n", $contents2); /*llamo a la funcion detectEOLTypes para obtener el caracter que divide el string por lineas y usarlo en el explode*/
-										$arr2=$this->remove_empty_slots($arr2);
-									
+										//error_log(var_dump($eolchar));
+                    if(strpos($contents2,"\r\n") !== false){
+                 			$arr2 = explode("\r\n", $contents2); /*llamo a la funcion detectEOLTypes para obtener el caracter que divide el string por lineas y usarlo en el explode*/
+										}else{
+											$arr2= explode($eolchar,$contents2);
+											}
+										$arr2=$this->remove_empty_slots($arr2);									
                     $all_authors = array();
                     for ($i=0;$i<count($arr2);$i++)  
                     {
@@ -554,14 +555,14 @@ public function view( $action='grading') {
 													array_push($all_authors, $st); // Guarda el arreglo $st en el arreglo $arr3 //
                     	}
 		    						}
-                   for ($i=0;$i<count($all_authors);$i++) // Prueba  Imprimir // 
+                   /*for ($i=0;$i<count($all_authors);$i++) // Prueba  Imprimir // 
                     {
 												$st=$all_authors[$i];
                         for ($j=0;$j<count($st);$j++)  
                         {
                             error_log("H:".$i ." ".$j. $st[$j]);
                         }
-                    }
+                    }*/
                     continue;
                 }
 					    
@@ -744,8 +745,18 @@ public function view( $action='grading') {
 		$i;
 		for($i=0; $i < count($authors); $i++){
 			$aux=$authors[$i];
-      $packager->addCreator($aux[0]);
-	  	$packager->addMailCreator($aux[1]);
+			error_log("creator".gettype($aux[0])."mailllllllllll ".gettype($aux[1]));			
+			error_log("creatorValor". $aux[0] ."mailllllllllllValor ".$aux[1]);
+			if(!empty($aux[0])){
+				if(isset($aux[0])){
+      		$packager->addCreator($aux[0]);
+				}
+			}
+			
+			if(!empty($aux[1])){			
+				if(isset($aux[1])){error_log("mailllllllllll ".gettype($aux[1]));	  		$packager->addMailCreator($aux[1]);
+			}
+			}
 		}
     foreach($datos["files"] as $file) {
       $packager->addFile($file["filename"], $file["mimetype"]);
@@ -810,7 +821,7 @@ public function view( $action='grading') {
                     //$sword=$DB->get_record('sword', array('id' => $swordid));
 		    
 		    // The URL of the service document
-		    $url = $sword->url;
+		    $url = $this->get_url($sword->url);
 		    
 		    
 		    // The user (if required)
@@ -851,7 +862,7 @@ public function view( $action='grading') {
 		    $error = false;
 		    try{
 		        $sac = new SWORDAPPClient();
-			//error_log(var_dump($package));
+						error_log(" envio a ".$url);
 		        $dr = $sac->deposit($url, $user, $pw, '', $package, $packageformat,$contenttype, false);
 		        //error_log($dr);
 		   	
@@ -946,7 +957,11 @@ public function view( $action='grading') {
 			$arr2= array_values($arr2);
 			return $arr2;
 	}
-    
+  private function get_URL($url){
+		if($url[0]=='1'){return "repositorio.info.unlp.edu.ar".substr($url,1);}
+		if($url[0]=='2'){return "dspace-dev.linti.unlp.edu.ar".substr($url,1);}
+		return "urlinvalida";	
+}  
     
     
 
