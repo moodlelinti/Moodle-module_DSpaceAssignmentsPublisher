@@ -1,4 +1,5 @@
 <?php
+
 require_once("../../config.php");
 require_once("locallib22.php");
 require_once($CFG->libdir.'/plagiarismlib.php');

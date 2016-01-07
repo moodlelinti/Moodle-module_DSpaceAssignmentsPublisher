@@ -1,8 +1,9 @@
 <?php
+
 require_once("../../config.php");
 require_once("lib.php");
 require_once($CFG->libdir.'/weblib.php');
-
+require_login();
 function sec_print($s) {
  return htmlspecialchars(strip_tags($s), ENT_QUOTES);
 }
@@ -80,8 +81,10 @@ function get_URL($url){
 	return "urlinvalida";	
 }
 try {
-if(isloggedin()){
+require_login();
+if(has_capability('mod/sword:selectrepo',context_user::instance($USER->id))){
 	// Moodle_URL valida la dirección y extrae las partes
+	
 	error_log("grande duilio". $_POST["url"]);
 	if(get_URL($_POST["url"])!="urlinvalida"){
 		$url = new moodle_url(get_URL($_POST["url"]) . '/rest/collections/');

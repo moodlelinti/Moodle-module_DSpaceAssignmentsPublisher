@@ -30,107 +30,110 @@
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // course_module ID, or
-$n  = optional_param('n', 0, PARAM_INT);  // sword instance ID - it should be named as the first character of the module
+require_login();
+if(has_capability('mod/sword:view',context_user::instance($USER->id))){
+	$id = optional_param('id', 0, PARAM_INT); // course_module ID, or
+	$n  = optional_param('n', 0, PARAM_INT);  // sword instance ID - it should be named as the first character of the module
 
-if ($id) {
-    $cm         = get_coursemodule_from_id('sword', $id, 0, false, MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $sword  = $DB->get_record('sword', array('id' => $cm->instance), '*', MUST_EXIST);
-} elseif ($n) {
-    $sword  = $DB->get_record('sword', array('id' => $n), '*', MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $sword->course), '*', MUST_EXIST);
-    $cm         = get_coursemodule_from_instance('sword', $sword->id, $course->id, false, MUST_EXIST);
-} else {
-    error('You must specify a course_module ID or an instance ID');
+	if ($id) {
+		  $cm         = get_coursemodule_from_id('sword', $id, 0, false, MUST_EXIST);
+		  $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+		  $sword  = $DB->get_record('sword', array('id' => $cm->instance), '*', MUST_EXIST);
+	} elseif ($n) {
+		  $sword  = $DB->get_record('sword', array('id' => $n), '*', MUST_EXIST);
+		  $course     = $DB->get_record('course', array('id' => $sword->course), '*', MUST_EXIST);
+		  $cm         = get_coursemodule_from_instance('sword', $sword->id, $course->id, false, MUST_EXIST);
+	} else {
+		  error('You must specify a course_module ID or an instance ID');
+	}
+
+	require_login($course, true, $cm);
+	$context = context_module::instance($cm->id);
+
+	add_to_log($course->id, 'sword', 'view', "view.php?id={$cm->id}", $sword->name, $cm->id);
+
+	/// Print the page header
+
+	$PAGE->set_url('/mod/sword/view.php', array('id' => $cm->id));
+	$PAGE->set_title(format_string($sword->name));
+	$PAGE->set_heading(format_string($course->fullname));
+	$PAGE->set_context($context);
+
+	// other things you may want to set - remove if not needed
+	//$PAGE->set_cacheable(false);
+	//$PAGE->set_focuscontrol('some-html-id');
+	//$PAGE->add_body_class('sword-'.$somevar);
+
+	// Output starts here
+	echo $OUTPUT->header();
+
+	if ($sword->intro) { // Conditions to show the intro can change to look for own settings or whatever
+
+		  echo $OUTPUT->box(format_module_intro('sword', $sword, $cm->id), 'generalbox mod_introbox', 'swordintro');
+
+	}
+
+	//code
+	echo $OUTPUT->heading(get_string('assignment_list', 'sword'));
+
+	$sql = 'SELECT cm.id, a.name
+	FROM {course_modules} cm
+	INNER JOIN {assign} a ON a.id = cm.instance
+	WHERE cm.course = a.course
+	AND module = (
+	SELECT id
+	FROM {modules}
+	WHERE name = \'assign\' ) 
+	AND cm.course=?';
+
+
+
+	$tareas = $DB->get_records_sql($sql, array('course'=>$course->id));
+	$listaTareas = array();
+
+	$table = new html_table();
+	$table->head = array(get_string('assignment', 'sword'));
+	$table->data = array();
+	foreach($tareas as $tarea) {
+		$fila = new html_table_row();
+		$url=html_writer::link(  
+		                       new moodle_url('/mod/sword/submissions.php', 
+		                                    array('id'=> $cm->id,                                             
+		                                          'assignment' => $tarea->id, 
+		                                          'sword' => $sword->id)),
+		                      $tarea->name);
+		$fila->cells[0] = $url;
+		$table->data[]=$fila;
+		
+		//
+	} 
+	/**
+		* Assignment Module 2.2
+		*/
+	$sql = 'SELECT cm.id, a.name
+	FROM {course_modules} cm
+	INNER JOIN {assignment} a ON a.id = cm.instance
+	WHERE cm.course = a.course
+	AND module = (
+	SELECT id
+	FROM {modules}
+	WHERE name = \'assignment\' ) 
+	AND cm.course=?';
+	$tareas = $DB->get_records_sql($sql, array('course'=>$course->id));
+	foreach($tareas as $tarea) {
+		$fila = new html_table_row();
+		$url=html_writer::link(  
+		                       new moodle_url('/mod/sword/submissions22.php', 
+		                                    array('id'=> $cm->id,                                             
+		                                          'assignment' => $tarea->id)),
+		                      $tarea->name);
+		$fila->cells[0] = $url;
+		$table->data[]=$fila;
+		
+		//
+	} 
+	echo html_writer::table($table);
+
+	// Finish the page
+	echo $OUTPUT->footer();
 }
-
-require_login($course, true, $cm);
-$context = context_module::instance($cm->id);
-
-add_to_log($course->id, 'sword', 'view', "view.php?id={$cm->id}", $sword->name, $cm->id);
-
-/// Print the page header
-
-$PAGE->set_url('/mod/sword/view.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($sword->name));
-$PAGE->set_heading(format_string($course->fullname));
-$PAGE->set_context($context);
-
-// other things you may want to set - remove if not needed
-//$PAGE->set_cacheable(false);
-//$PAGE->set_focuscontrol('some-html-id');
-//$PAGE->add_body_class('sword-'.$somevar);
-
-// Output starts here
-echo $OUTPUT->header();
-
-if ($sword->intro) { // Conditions to show the intro can change to look for own settings or whatever
-
-    echo $OUTPUT->box(format_module_intro('sword', $sword, $cm->id), 'generalbox mod_introbox', 'swordintro');
-
-}
-
-//code
-echo $OUTPUT->heading(get_string('assignment_list', 'sword'));
-
-$sql = 'SELECT cm.id, a.name
-FROM {course_modules} cm
-INNER JOIN {assign} a ON a.id = cm.instance
-WHERE cm.course = a.course
-AND module = (
-SELECT id
-FROM {modules}
-WHERE name = \'assign\' ) 
-AND cm.course=?';
-
-
-
-$tareas = $DB->get_records_sql($sql, array('course'=>$course->id));
-$listaTareas = array();
-
-$table = new html_table();
-$table->head = array(get_string('assignment', 'sword'));
-$table->data = array();
-foreach($tareas as $tarea) {
-  $fila = new html_table_row();
-  $url=html_writer::link(  
-                         new moodle_url('/mod/sword/submissions.php', 
-                                      array('id'=> $cm->id,                                             
-                                            'assignment' => $tarea->id, 
-                                            'sword' => $sword->id)),
-                        $tarea->name);
-  $fila->cells[0] = $url;
-  $table->data[]=$fila;
-  
-  //
-} 
-/**
-  * Assignment Module 2.2
-  */
-$sql = 'SELECT cm.id, a.name
-FROM {course_modules} cm
-INNER JOIN {assignment} a ON a.id = cm.instance
-WHERE cm.course = a.course
-AND module = (
-SELECT id
-FROM {modules}
-WHERE name = \'assignment\' ) 
-AND cm.course=?';
-$tareas = $DB->get_records_sql($sql, array('course'=>$course->id));
-foreach($tareas as $tarea) {
-  $fila = new html_table_row();
-  $url=html_writer::link(  
-                         new moodle_url('/mod/sword/submissions22.php', 
-                                      array('id'=> $cm->id,                                             
-                                            'assignment' => $tarea->id)),
-                        $tarea->name);
-  $fila->cells[0] = $url;
-  $table->data[]=$fila;
-  
-  //
-} 
-echo html_writer::table($table);
-
-// Finish the page
-echo $OUTPUT->footer();

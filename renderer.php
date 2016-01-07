@@ -1,4 +1,6 @@
 <?php
+require_login();
+if(has_capability('mod/sword:view',context_user::instance($USER->id))){
 require_once($CFG->dirroot . '/mod/assign/renderer.php');
 class mod_sword_renderer extends mod_assign_renderer {
 
@@ -34,7 +36,7 @@ class mod_sword_renderer extends mod_assign_renderer {
 
         return $o;
     }
-
+}
 
 }
 

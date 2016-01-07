@@ -16,7 +16,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') || die();
-;
 require_once($CFG->libdir . '/accesslib.php');
 require_once($CFG->libdir . '/formslib.php');
 require_once($CFG->dirroot . '/repository/lib.php');
@@ -842,8 +841,8 @@ public function view( $action='grading') {
 
 		    /*guardo una copia del paquete a enviar antes de realizar el envio*/
 		    /*if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
-    				error_log("no se pudo guardar una copia del envio");*/
-			}
+    				error_log("no se pudo guardar una copia del envio");
+					}*/
 			
 		    require_once($CFG->dirroot .'/mod/sword/api/swordappclient.php');
 		    

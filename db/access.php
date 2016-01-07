@@ -73,6 +73,15 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
+		'mod/sword:selectrepo'=> array(
+				'riskbitmask' => RISK_XSS,
+				'captype' => 'write',
+				'contextlevel' => CONTEXT_COURSE,
+				'archetypes' => array(
+	    	'editingteacher' => CAP_ALLOW,
+	     	'manager' => CAP_ALLOW
+				)
+		),
 
     'mod/sword:submit' => array(
         'riskbitmask' => RISK_SPAM,

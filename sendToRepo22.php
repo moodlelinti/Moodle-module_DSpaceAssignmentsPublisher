@@ -1,28 +1,30 @@
 <?php
 try{
-require_once("../../config.php");
-require_once("lib.php");
-require_once($CFG->libdir.'/plagiarismlib.php');
 
+	require_once("../../config.php");
+	require_once("lib.php");
+	require_once($CFG->libdir.'/plagiarismlib.php');
+	require_login();
+	if(has_capability('mod/sword:selectrepo',context_user::instance($USER->id))){
 
-$course_id      = required_param('id',PARAM_INT);          // Course module ID
-$sword_cm_id    = required_param('sword_cm_id',PARAM_INT);          // Course module ID
-$submissions    = required_param_array('submissions',PARAM_INT);// submissions selected
-$cm             = get_coursemodule_from_id('assignment', $course_id);
-$assignment     = $DB->get_record("assignment", array("id"=>$cm->instance));
-$course         = $DB->get_record("course", array("id"=>$assignment->course));
+		$course_id      = required_param('id',PARAM_INT);          // Course module ID
+		$sword_cm_id    = required_param('sword_cm_id',PARAM_INT);          // Course module ID
+		$submissions    = required_param_array('submissions',PARAM_INT);// submissions selected
+		$cm             = get_coursemodule_from_id('assignment', $course_id);
+		$assignment     = $DB->get_record("assignment", array("id"=>$cm->instance));
+		$course         = $DB->get_record("course", array("id"=>$assignment->course));
 
-require_login($assignment->course, false, $cm);
+		require_login($assignment->course, false, $cm);
 
-/// Load up the required assignment code
+		/// Load up the required assignment code
 
-require($CFG->dirroot.'/mod/sword/type/'.$assignment->assignmenttype.'/assignment.class.php');
-$assignmentclass = 'sword_'.$assignment->assignmenttype;
-$assignmentinstance = new $assignmentclass($assignment->id, $assignment, $cm, $course);
-error_log("aca 2");
+		require($CFG->dirroot.'/mod/sword/type/'.$assignment->assignmenttype.'/assignment.class.php');
+		$assignmentclass = 'sword_'.$assignment->assignmenttype;
+		$assignmentinstance = new $assignmentclass($assignment->id, $assignment, $cm, $course);
+		error_log("aca 2");
 
-$assignmentinstance->sword_submissions($submissions,$sword_cm_id);
-
+		$assignmentinstance->sword_submissions($submissions,$sword_cm_id);
+	}
 } catch(Exception $e)  {
   echo get_string('msg_error', 'sword');
 }
