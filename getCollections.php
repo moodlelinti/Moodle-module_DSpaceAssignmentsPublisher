@@ -116,10 +116,9 @@ if(has_capability('mod/sword:selectrepo',context_user::instance($USER->id))){
 					 curl_close($ch);
 					 //Decodifico y me aseguro que sea un JSON válido	
 					//remplazar como manejo el jason del otro lado o si lo manejo de otra forma
-					 //$ret = (json_encode(sec_print($output)));
-						$ret = $output;					 
+					$ret = json_encode(sec_print_array(json_decode($output,true)));					 
 					// para la salida estandar:
-           echo json_encode(sec_print_array(json_decode($ret,true)));     
+           echo $ret;     
 					 if ($ret != null ) {       
 							 return $ret;       
 						}
