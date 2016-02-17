@@ -8,7 +8,6 @@ function getCollections(selected){
      data: {url: url},
      dataType: "json",
      success: function(json) {       
-       
 	  for (var key in json) {
 	      collection = json[key];
 	      optionBegin = '<option value="' + url + '/sword/deposit/' + collection["handle"] + '"';

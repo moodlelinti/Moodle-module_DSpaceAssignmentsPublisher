@@ -7,8 +7,14 @@ require_once($CFG->dirroot . '/mod/sword/locallib.php');
 $PAGE->requires->js('/mod/sword/js/sword.js', true);
 $PAGE->requires->js('/mod/sword/js/jquery.js', true);
 $PAGE->requires->css('/mod/sword/css/estilo.css', true);
+
 require_login();
-if(has_capability('mod/sword:view',context_user::instance($USER->id))){
+$cmid = required_param('id', PARAM_INT);
+if (!$cm = get_coursemodule_from_id('sword', $cmid)) {
+    error("Course module ID was incorrect");
+}
+$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+if(has_capability('mod/sword:view',$context)){
 
 	$id = required_param('id', PARAM_INT); // Course module ID
 	$assignment    = required_param('assignment', PARAM_INT);           // Assignment ID
