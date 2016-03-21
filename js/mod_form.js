@@ -40,12 +40,12 @@ function getCollections(selected){
 
 }
 $(document).ready( function() {  
-  $( "#accordion" ).accordion();
+  //$( "#accordion" ).accordion();
 
   $("#id_url_selector").change( function() {
        $('input[name="url"]').val($("#id_url_selector option:selected").val());
   });
-  $("#fitem_id_find").appendTo("#fitem_id_base_url");
+  /*$("#fitem_id_find").appendTo("#fitem_id_base_url");
   $('#id_url_selector').prop('disabled', true);
 
   
@@ -61,5 +61,5 @@ $(document).ready( function() {
      //});
      
   }
-  
+  */
 });

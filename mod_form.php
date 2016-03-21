@@ -30,6 +30,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
+require_once($CFG->dirroot.'/mod/sword/getCollections.php');
    $PAGE->requires->js('/mod/sword/js/jquery.js', true);
    $PAGE->requires->js('/mod/sword/js/jquery-ui-1.10.4.custom.min.js', true);
    $PAGE->requires->js('/mod/sword/js/mod_form.js', true);
@@ -75,7 +76,7 @@ class mod_sword_mod_form extends moodleform_mod {
         
         $mform->addElement('header', 'repository', get_string('repository', 'sword'));
         
-         $mform->addElement('html', '<div id="accordion">');
+         //$mform->addElement('html', '<div id="accordion">');
          $mform->addElement('html', '<h3>' . get_string("search_collection","sword") . "</h3>");
          
          $mform->addElement('html', '<div>');
@@ -84,27 +85,37 @@ class mod_sword_mod_form extends moodleform_mod {
     		'1' => 'Repositorio Facultad Informatica',
     		'2' => 'Desarrollo'
 				);
-				$select = $mform->addElement('select', 'base_url', get_string('repositoryurl','sword'), $REPOS);
-				$select->setSelected('2');         
+				//$select = $mform->addElement('select', 'base_url', get_string('repositoryurl','sword'), $REPOS);
+				//$select->setSelected('2');         
 				//$mform->setType('base_url', PARAM_CLEAN);
         
-        $mform->addElement('button', 'find', get_string("search"), array('onclick' => 'getCollections(null)'));
-        $mform->setType('find', PARAM_CLEAN);
+        //$mform->addElement('button', 'find', get_string("search"), array('onclick' => 'getCollections(null)'));
+        //$mform->setType('find', PARAM_CLEAN);
        
-         $mform->addElement('select', 'url_selector', get_string("selectcollection",'sword'));
-        
+				 $ret= getCollections(2);
+				 $collections= array();
+				 $collections_decoded= json_decode($ret);
+				 foreach ($collections_decoded  as $collection) {
+	      	$key ='repositorio.info.unlp.edu.ar' . '/sword/deposit/' . $collection->{'handle'};
+	      	$value= $collection->{"name"};
+					$collections["$key"]= $value;
+	  		}
+				$mform->addElement('select', 'url_selector', get_string("selectcollection",'sword'),$collections);        
+	  //$('#id_url_selector').prop('disabled', false);
+	  
          if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('url_selector', PARAM_TEXT);
         } else {
             $mform->setType('url_selector', PARAM_CLEAN);
         }
-        $mform->addElement('html', '</div>'); 
-         $mform->addElement('html', '<h3>' . get_string("url_collection","sword") . "</h3>");         
-         $mform->addElement('html', '<div>');
-        $mform->addElement('text','url', "Url de la colección",array("id" => "url","size"=>"64"));
-        $mform->setType('url', PARAM_CLEAN);
-        $mform->addElement('html', '</div>');
-        $mform->addElement('html', '</div>');
+        //$mform->addElement('html', '</div>'); 
+         //$mform->addElement('html', '<h3>' . get_string("url_collection","sword") . "</h3>");         
+         //$mform->addElement('html', '<div>');
+        $mform->addElement('hidden','url',array("id" => "url","name"=>"url"));
+        //$mform->setType('url', PARAM_CLEAN);
+        //$mform->addElement('html', '</div>');
+        //$mform->addElement('html', '</div>');
+				 $mform->addElement('html', '<h3>' . 'Datos de usuario' . "</h3>");
         $mform->addElement('text', 'username', get_string('username', 'sword'), array('size'=>'64'));
         
           if (!empty($CFG->formatstringstriptags)) {

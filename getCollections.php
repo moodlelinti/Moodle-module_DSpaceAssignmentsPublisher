@@ -1,6 +1,6 @@
 <?php
-define('AJAX_SCRIPT', true);
-require_once("../../config.php");
+//define('AJAX_SCRIPT', true);
+//require_once("../../config.php");
 require_once("lib.php");
 require_once($CFG->libdir.'/weblib.php');
 function sec_print($s) {
@@ -87,22 +87,12 @@ function get_URL($url){
 	if($url=='2'){return "dspace-dev.linti.unlp.edu.ar";}
 	return "urlinvalida";	
 }
-try {
-//require_login();
-/*$context = get_context_instance(CONTEXT_MODULE, $cm->id);
-error_log("CONTEXT".var_dump($context));
-if(has_capability('mod/sword:selectrepo',$context)){
-*/	
-	// Moodle_URL valida la dirección y extrae las partes
-	
-	//error_log("grande duilio". $_POST["url"]);
-	if(get_URL($_POST["url"])!="urlinvalida"){
-		$url = new moodle_url(get_URL($_POST["url"]) . '/rest/collections/');
-		//error_log("mi url es:".$url);
-		/*$pad='';
-		foreach ($_POST as $key => $value){		      
-			error_log ($pad . "$key => $value");  
-				 } */
+//try {
+function getCollections($id){
+
+
+	if(get_URL($id)!="urlinvalida"){
+		$url = new moodle_url(get_URL($id) . '/rest/collections/');
 		$url->remove_all_params();
 		//Valido que la dirección termine con /rest/collections
 		if (substr($url->get_path(true), -18,18) == '/rest/collections/') {
@@ -120,7 +110,7 @@ if(has_capability('mod/sword:selectrepo',$context)){
 					//remplazar como manejo el jason del otro lado o si lo manejo de otra forma
 					$ret = json_encode(sec_print_array(json_decode($output,true)));					 
 					// para la salida estandar:
-           echo $ret;     
+           //echo $ret;     
 					 if ($ret != null ) {       
 							 return $ret;       
 						}
@@ -128,9 +118,6 @@ if(has_capability('mod/sword:selectrepo',$context)){
 			}
 		}
 		return false;
-//}
-	} catch (Exception $e) {
-	 return false;
+	}
 
-}
 

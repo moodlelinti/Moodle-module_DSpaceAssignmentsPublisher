@@ -26,7 +26,7 @@ function enviar(course_id,assignment_id, swordid)
      swordid:swordid 
     },
      function(data, textStatus, jqXHR) {
-           $("body").removeClass("loading"); 	   
+           $("body").removeClass("loading");    
 	  alert(data);	
 	  location.reload(true);
      }
@@ -37,9 +37,8 @@ function enviar(course_id,assignment_id, swordid)
 	         str:"non_selected"
 	     },
 	     function(data, textStatus, jqXHR) {         
-	         alert(data);		 
-              });     
-      
+	         alert(data);
+              });          
   }
   
   
