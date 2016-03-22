@@ -92,17 +92,20 @@ class mod_sword_mod_form extends moodleform_mod {
         //$mform->addElement('button', 'find', get_string("search"), array('onclick' => 'getCollections(null)'));
         //$mform->setType('find', PARAM_CLEAN);
        
-				 $ret= getCollections(2);
+				 $ret= getCollections('1');
 				 $collections= array();
 				 $collections_decoded= json_decode($ret);
-				 foreach ($collections_decoded  as $collection) {
-	      	$key ='repositorio.info.unlp.edu.ar' . '/sword/deposit/' . $collection->{'handle'};
-	      	$value= $collection->{"name"};
-					$collections["$key"]= $value;
-	  		}
-				$mform->addElement('select', 'url_selector', get_string("selectcollection",'sword'),$collections);        
-	  //$('#id_url_selector').prop('disabled', false);
-	  
+				 if($ret==false){
+							$mform-> addElement('html','<p>'."No se pudo obtener las colecciones"."</p>");
+				 }
+				 else{
+				 	foreach ($collections_decoded  as $collection) {
+			    	$key ='1' . '/sword/deposit/' . $collection->{'handle'};
+			    	$value= $collection->{"name"};
+						$collections["$key"]= $value;
+				  }
+					$mform->addElement('select', 'url_selector', get_string("selectcollection",'sword'),$collections);        
+	 			} 
          if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('url_selector', PARAM_TEXT);
         } else {

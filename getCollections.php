@@ -83,7 +83,7 @@ function isValidURL($url){
 	return false;
 }
 function get_URL($url){
-	if($url=='1'){return "repositorio.info.unlp.edu.ar";}
+	if($url=='1'){ return "repositorio.info.unlp.edu.ar";}
 	if($url=='2'){return "dspace-dev.linti.unlp.edu.ar";}
 	return "urlinvalida";	
 }

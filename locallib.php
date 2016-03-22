@@ -482,6 +482,7 @@ public function view( $action='grading') {
 
        $error = false;
            $sword_metadata=$DB->get_record('sword', array('id' => $this->cm_sword->instance));
+					
         // Get all the files for each student.
         foreach ($students_selected as $student) {
             $userid = $student->id;
@@ -811,7 +812,7 @@ public function view( $action='grading') {
 		    
 		    // The URL of the service document
 		    $url = $this->get_url($sword->url);
-		    
+		 
 		    
 		    // The user (if required)
 		    $user = $sword->username;
@@ -853,9 +854,7 @@ public function view( $action='grading') {
 		        $sac = new SWORDAPPClient();
 		        $dr = $sac->deposit($url, $user, $pw, '', $package, $packageformat,$contenttype, false);
 		        //error_log($dr);
-		   	
-			error_log($dr->sac_status);
-			if ($dr->sac_status!=201) {  
+		  if ($dr->sac_status!=201) {  
 			      $status='error';
 			      $error = true;
 			} else {
