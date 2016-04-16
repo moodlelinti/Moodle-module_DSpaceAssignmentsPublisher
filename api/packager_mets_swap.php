@@ -113,12 +113,10 @@ class PackagerMetsSwap {
         $this->sac_abstract = $this->clean($sac_thetitle);
     }
 		function addMailCreator($sac_mail_creator){
-					error_log($sac_mail_creator);
 			  	array_push($this->sac_creators_mails, $this->clean($sac_mail_creator));
 		}
 
     function addCreator($sac_creator) {
-				error_log($sac_creator);
         array_push($this->sac_creators, $this->clean($sac_creator));
     }
 
@@ -263,6 +261,7 @@ class PackagerMetsSwap {
                                            $this->sac_type);
         }
 				foreach ($this->sac_creators_mails as $sac_creator_mail) {
+						
             $this->statement($fh,
                              "http://purl.org/dc/elements/1.1/creator_mail",
                              $this->valueString($sac_creator_mail));
@@ -439,7 +438,16 @@ class PackagerMetsSwap {
     }
 
     function clean($data) {
+			if(gettype($data)=="array"){
+				$ret= array();
+				foreach($data as $val){
+					$ret[]=htmlspecialchars($val, ENT_QUOTES);
+				}
+				return $ret;
+			}
+			else{
         return str_replace('&#039;', '&apos;', htmlspecialchars($data, ENT_QUOTES));
-    }
+			}    
+		}
 }
 ?>

@@ -35,7 +35,7 @@ $cmid = required_param('id', PARAM_INT);
 if (!$cm = get_coursemodule_from_id('sword', $cmid)) {
     error("Course module ID was incorrect");
 }
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$context = context_module::instance($cm->id);
 
 if(has_capability('mod/sword:view',$context)){
 
@@ -57,7 +57,7 @@ if(has_capability('mod/sword:view',$context)){
 	require_login($course, true, $cm);
 	$context = context_module::instance($cm->id);
 
-	add_to_log($course->id, 'sword', 'view', "view.php?id={$cm->id}", $sword->name, $cm->id);
+	//error_log($course->id, 'sword', 'view', "view.php?id={$cm->id}", $sword->name, $cm->id);
 
 	/// Print the page header
 

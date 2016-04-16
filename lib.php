@@ -97,13 +97,12 @@ function sword_add_instance(stdClass $sword, mod_sword_mod_form $mform = null) {
  */
 function sword_update_instance(stdClass $sword, mod_sword_mod_form $mform = null) {
     global $DB;
-
     $sword->timemodified = time();
     $sword->id = $sword->instance;
-		$sword->programminglanguage= convert($sword->programminglanguage);
-
-    # You may have to add extra stuff in here #
-
+		if(isset($sword->programminglanguage)){
+			$sword->programminglanguage= convert($sword->programminglanguage);
+		}
+    
     return $DB->update_record('sword', $sword);
 }
 
