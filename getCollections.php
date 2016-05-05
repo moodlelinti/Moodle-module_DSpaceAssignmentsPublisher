@@ -16,7 +16,7 @@ function sec_print_array($arr){
 	return $arr;
 }
 function remoteFileExists($url) {
-    //error_log("URL en cuestion ".$url);
+    error_log("URL en cuestion ".$url);
     $curl = curl_init($url);
 
     //don't fetch the actual page, you only want to check the connection is ok
@@ -92,7 +92,7 @@ function getCollections($id){
 
 
 	if(get_URL($id)!="urlinvalida"){
-		$url = new moodle_url(get_URL($id) . '/rest/collections/');
+		$url = new moodle_url("https://".get_URL($id) . '/rest/collections/');
 		$url->remove_all_params();
 		//Valido que la dirección termine con /rest/collections
 		if (substr($url->get_path(true), -18,18) == '/rest/collections/') {

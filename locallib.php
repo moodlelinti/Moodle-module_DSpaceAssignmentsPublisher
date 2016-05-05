@@ -263,7 +263,7 @@ public function view( $action='grading') {
         $o .= $this->view_footer();
 
         $logmessage = get_string('viewsubmissiongradingtable', 'assign');
-        $this->add_to_log('view submission grading table', $logmessage);
+        //error_log('view submission grading table', $logmessage);
         return $o;
     }
     
@@ -645,19 +645,18 @@ public function view( $action='grading') {
         
         // add default metadata
         
-        
-         if (($arr!=NULL) && ($sword_metadata->subject != NULL)) {                               
-           $arr[]=$sword_metadata->subject;           
+        /* codigo obsoleto para manejar el subject
+						if (($arr!=NULL) && ($sword_metadata->subject != NULL)) {                               
+           $arr[]=$sword_metadata->subject;  
+					error_log(var_dump($arr));         
            $datos["subject"]=$arr;
          } else {
            if ($arr!=NULL) {
 	      $datos["subject"]=array($arr);
-           }
+           }*/
            if ($sword_metadata->subject != NULL)      {
-	    $datos["subject"]=array($sword_metadata->subject);
+	    				$datos["subject"]=explode($sword_metadata->subject," ");
            }
-	   
-         }
          if($sword_metadata->type != NULL) {
             $datos["type"]=$sword_metadata->type;
            error_log("type bien");
@@ -757,8 +756,8 @@ public function view( $action='grading') {
 	
 	
 	if (array_key_exists("subject",$datos)){
-	    foreach($datos["subject"] as $subject) {
-		$packager->addSubject($subject);
+	   foreach($datos["subject"] as $subject) {
+				$packager->addSubject($subject);
 	    }
 	}
 	if(array_key_exists("type",$datos)){
@@ -812,6 +811,7 @@ public function view( $action='grading') {
 		    
 		    // The URL of the service document
 		    $url = $this->get_url($sword->url);
+				error_log("url antes de enviar " . $url);
 		 
 		    
 		    // The user (if required)
@@ -841,9 +841,9 @@ public function view( $action='grading') {
 		    */
 
 		    /*guardo una copia del paquete a enviar antes de realizar el envio*/
-		    /*if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
+		    if (!copy($package, $CFG->dirroot.'/mod/sword/prueba.zip')) {
     				error_log("no se pudo guardar una copia del envio");
-					}*/
+					}
 			
 		    require_once($CFG->dirroot .'/mod/sword/api/swordappclient.php');
 		    
@@ -853,7 +853,6 @@ public function view( $action='grading') {
 		    try{
 		        $sac = new SWORDAPPClient();
 		        $dr = $sac->deposit($url, $user, $pw, '', $package, $packageformat,$contenttype, false);
-		        //error_log($dr);
 		  if ($dr->sac_status!=201) {  
 			      $status='error';
 			      $error = true;
@@ -945,8 +944,8 @@ public function view( $action='grading') {
 			return $arr2;
 	}
   private function get_URL($url){
-		if($url[0]=='1'){return "repositorio.info.unlp.edu.ar".substr($url,1);}
-		if($url[0]=='2'){return "dspace-dev.linti.unlp.edu.ar".substr($url,1);}
+		if($url[0]=='1'){error_log("devuelvo "."https://repositorio.info.unlp.edu.ar".substr($url,1));return "https://repositorio.info.unlp.edu.ar".substr($url,1);}
+		if($url[0]=='2'){error_log("devuelvo "."https://dspace-dev.linti.unlp.edu.ar".substr($url,1));return "https://dspace-dev.linti.unlp.edu.ar".substr($url,1);}
 		return "urlinvalida";	
 }  
     
