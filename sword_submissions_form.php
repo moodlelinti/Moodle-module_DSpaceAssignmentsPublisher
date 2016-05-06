@@ -43,17 +43,40 @@ class sword_submisison_form extends moodleform {
         $mform = $this->_form;
         $instance = $this->_customdata;
 
+      
+	
+				//USUARIO
+				$mform->addElement('html', '<h5>' . '    Datos de usuario' . "</h5");
+        $mform->addElement('text', 'username', get_string('username', 'sword'), array('size'=>'64','id'=>'username'));
         
+          if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('username', PARAM_TEXT);
+        } else {
+            $mform->setType('username', PARAM_CLEAN);
+        }
+        
+        $mform->addRule('username', null, 'required', null, 'client');
+        $mform->addElement('password', 'password', get_string('password', 'sword'), array('size'=>'64','id'=>'password'));
+        
+           if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('password', PARAM_TEXT);
+        } else {
+            $mform->setType('password', PARAM_CLEAN);
+        }
+        
+        $mform->addRule('password', null, 'required', null, 'client');
 
-        $objs = array();
-        
-        $objs[] =& $mform->createElement('button',
+				//USUARIO
+				
+				 $objs = array();
+				 $objs[] =& $mform->createElement('button',
                                          'button', 
                                           get_string('sendtorepo','sword'),
                                           array('onclick'=> 'enviar(' . $instance["course"] . ',' .
                                                    $instance["assignment"] . ',' .
                                                    $instance["sword"] .               ')'));
         $batchdescription = get_string('batchoperationsdescription', 'assign');
-        $mform->addElement('group', 'actionsgrp', $batchdescription, $objs, ' ', false);
+				$mform->addElement('group', 'actionsgrp', $batchdescription , $objs, ' ', false);
+						
     }
 }

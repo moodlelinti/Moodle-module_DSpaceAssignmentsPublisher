@@ -14,7 +14,8 @@ function recuperarValores()
 
 function enviar(course_id,assignment_id, swordid)
 {
-
+	user= document.getElementById("username").value;
+	password=document.getElementById("password").value;
   submissions =recuperarValores();
   if (submissions.length>0) {
    $("body").addClass("loading");
@@ -23,7 +24,9 @@ function enviar(course_id,assignment_id, swordid)
     {id:course_id,
      assignment_id:assignment_id,
      submissions:submissions,
-     swordid:swordid 
+     swordid:swordid,
+		 password:password,
+		 user:user 
     },
      function(data, textStatus, jqXHR) {
            $("body").removeClass("loading");    

@@ -118,7 +118,7 @@ class mod_sword_mod_form extends moodleform_mod {
         //$mform->setType('url', PARAM_CLEAN);
         //$mform->addElement('html', '</div>');
         //$mform->addElement('html', '</div>');
-				 $mform->addElement('html', '<h3>' . 'Datos de usuario' . "</h3>");
+				/*USUARIO $mform->addElement('html', '<h3>' . 'Datos de usuario' . "</h3>");
         $mform->addElement('text', 'username', get_string('username', 'sword'), array('size'=>'64'));
         
           if (!empty($CFG->formatstringstriptags)) {
@@ -137,7 +137,7 @@ class mod_sword_mod_form extends moodleform_mod {
         }
         
         $mform->addRule('password', null, 'required', null, 'client');
-        
+        */
         
         $mform->addElement('header', 'metadata', get_string('metadata', 'sword'));
 

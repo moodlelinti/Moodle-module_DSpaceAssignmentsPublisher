@@ -47,7 +47,6 @@ require_once($CFG->dirroot.'/mod/assign/locallib.php');
   
 
 class sword_assign extends assign {
-  
   private $cm_sword;  
   private $context;
   private $cm;
@@ -63,10 +62,10 @@ class sword_assign extends assign {
      $this->cm      = $cm;
      $this->context = $context;   
      $this->cm_sword = $cm_sword;
-     
+   
      $this->submissionplugins = $this->load_plugins('assignsubmission');
      $this->feedbackplugins = $this->load_plugins('assignfeedback');
-  }
+	}
 
 public function view( $action='grading') {
       
@@ -419,7 +418,7 @@ public function view( $action='grading') {
                                                               '',
                                                               $formclasses);
                                                               
-
+				error_log("la data".$data);
         if ($data = $mform->get_data()) {
 	      // Get the list of users.
 	      $users = $data->selectedusers;
@@ -442,8 +441,8 @@ public function view( $action='grading') {
      *
      * @return string - If an error occurs, this will contain the error page.
      */
-    public function sword_submissions($userselected) {
-        
+    public function sword_submissions($userselected,$user="invalid",$password="invalid") {
+        //esta funcion  es llamada de varios lugares, creo que el codigo que no puede setear el usuario y password esta depracated, uso valores por defecto en parametros para altertar de esta situacion*/
         global $CFG, $DB;
         $context = context_module::instance($this->cm->id);
         
@@ -582,7 +581,7 @@ public function view( $action='grading') {
                 $paquete = $this->makePackage($filesdata, $sword_metadata, $arr,$all_authors, $userid, $this->get_instance()->id);
                 
                  
-                 $resultado  = $this->sendToRepository($paquete,$submission->id, $sword_metadata);
+                 $resultado  = $this->sendToRepository($paquete,$submission->id, $sword_metadata,$user,$password);
                
                 
                
@@ -802,7 +801,7 @@ public function view( $action='grading') {
      * $swordid sword instance
      * $package package to deposit
      */
-     private function sendToRepository($package, $submissionid, $sword) {
+     private function sendToRepository($package, $submissionid, $sword,$username,$password) {
      global $CFG,$DB;
      
                     $dir= $this->output_directory . 'mets_swap_package.zip';
@@ -815,11 +814,12 @@ public function view( $action='grading') {
 		 
 		    
 		    // The user (if required)
-		    $user = $sword->username;
-		    
+		    //$user = $sword->username;
+		    	$user = $username;
 		    // The password of the user (if required)
-		    $pw = $sword->password;
-		    
+		    //$pw = $sword->password;
+		    	$pw= $password;
+				error_log("usuario y contraseña antes de enviar ".$user." ".$pw);
 
 		    // Atom entry to deposit
 		    $atomentry = "test-files/atom_multipart/atom";

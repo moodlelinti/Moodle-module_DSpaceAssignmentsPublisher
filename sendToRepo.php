@@ -16,7 +16,9 @@ try {
 		$course_id             = required_param('id',PARAM_INT);          // Course module ID
 		$submissions    = required_param_array('submissions',PARAM_INT);// submissions selected
 		$assignment_id  = required_param('assignment_id',PARAM_INT);// submissions selected
-
+		$user						= required_param('user',PARAM_STRINGID);
+		$password				=	required_param('password',PARAM_STRINGID);
+		
 		$cm = get_coursemodule_from_id('assign', $assignment_id, 0, false, MUST_EXIST);
 		$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 		$cm_sword = get_coursemodule_from_id('sword', $swordid, 0, false, MUST_EXIST);
@@ -31,7 +33,7 @@ try {
 
 		$context= context_module::instance($cm->id);
 		$sword_assign = new sword_assign($context,$cm,$course,$cm_sword);
-		$sword_assign->sword_submissions($submissions);
+		$sword_assign->sword_submissions($submissions,$user,$password);
 
 } catch(Exception $e)  {
   echo $e;
