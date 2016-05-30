@@ -582,6 +582,7 @@ public function view( $action='grading') {
                 
                  
                  $resultado  = $this->sendToRepository($paquete,$submission->id, $sword_metadata,$user,$password);
+							
                
                 
                
@@ -819,7 +820,6 @@ public function view( $action='grading') {
 		    // The password of the user (if required)
 		    //$pw = $sword->password;
 		    	$pw= $password;
-				error_log("usuario y contraseña antes de enviar ".$user." ".$pw);
 
 		    // Atom entry to deposit
 		    $atomentry = "test-files/atom_multipart/atom";
@@ -856,6 +856,9 @@ public function view( $action='grading') {
 		  if ($dr->sac_status!=201) {  
 			      $status='error';
 			      $error = true;
+						error_log("mensaje de error");
+						error_log($dr->sac_status);
+						error_log($dr->sac_statusmessage);
 			} else {
 			      $status='send';
 			      $error = false;

@@ -1,12 +1,6 @@
 <?php
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/assign/renderer.php');
-/*class mod_sword_renderer_factory extends theme_overridden_renderer_factory {
-public function __construct(theme_config $theme) {
-  parent::__construct($theme);
-  array_unshift($this->prefixes, 'mod_sword');
-}
-}*/
 class mod_sword_renderer extends mod_assign_renderer {
 
 

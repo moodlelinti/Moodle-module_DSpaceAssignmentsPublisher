@@ -1,6 +1,4 @@
 <?php
-//define('AJAX_SCRIPT', true);
-//require_once("../../config.php");
 require_once("lib.php");
 require_once($CFG->libdir.'/weblib.php');
 function sec_print($s) {
@@ -87,32 +85,22 @@ function get_URL($url){
 	if($url=='2'){return "dspace-dev.linti.unlp.edu.ar";}
 	return "urlinvalida";	
 }
-//try {
 function getCollections($id){
 
 
 	if(get_URL($id)!="urlinvalida"){
 		$url = new moodle_url("https://".get_URL($id) . '/rest/collections/');
 		$url->remove_all_params();
-		//Valido que la dirección termine con /rest/collections
 		if (substr($url->get_path(true), -18,18) == '/rest/collections/') {
-			//if (remoteFileExists($url->get_path(true))) {
 					if (remoteFileExists($url)) {
-					 //error_log("verifique que la URL existe");  
-					 //Si la URL existe hago la petición
-					 $ch = curl_init($url);
-					 //remplaze para que se hiciera la peticion con la URL entera				 
-					 curl_setopt($ch, CURLOPT_HEADER, 0);
-					 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //no usa salida estandar
-					 $output = curl_exec($ch);
-					 curl_close($ch);
-					 //Decodifico y me aseguro que sea un JSON válido	
-					//remplazar como manejo el jason del otro lado o si lo manejo de otra forma
-					$ret = json_encode(sec_print_array(json_decode($output,true)));					 
-					// para la salida estandar:
-           //echo $ret;     
-					 if ($ret != null ) {       
-							 return $ret;       
+					  $ch = curl_init($url);
+					  curl_setopt($ch, CURLOPT_HEADER, 0);
+					  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //no usa salida estandar
+					  $output = curl_exec($ch);
+					  curl_close($ch);
+					  $ret = json_encode(sec_print_array(json_decode($output,true)));					 
+					  if ($ret != null ) {       
+					  	return $ret;       
 						}
 					}
 			}

@@ -52,7 +52,6 @@ $capabilities = array(
 
     'mod/sword:addinstance' => array(
 	'riskbitmask' => RISK_XSS,
-
 	'captype' => 'write',
 	'contextlevel' => CONTEXT_COURSE,
 	'archetypes' => array(
@@ -61,7 +60,6 @@ $capabilities = array(
 	),
 	'clonepermissionsfrom' => 'moodle/course:manageactivities'
     ),
-
     'mod/sword:view' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
@@ -83,7 +81,6 @@ $capabilities = array(
 				'teacher'=> CAP_ALLOW
 			)		
 		),
-
     'mod/sword:submit' => array(
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
@@ -91,6 +88,4 @@ $capabilities = array(
         'legacy' => array(
             'student' => CAP_ALLOW
         )
-    ),
-
-);
+    ),);
