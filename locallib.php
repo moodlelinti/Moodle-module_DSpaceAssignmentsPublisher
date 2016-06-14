@@ -859,6 +859,7 @@ public function view( $action='grading') {
 						error_log("mensaje de error");
 						error_log($dr->sac_status);
 						error_log($dr->sac_statusmessage);
+						//error_log(var_dump($dr));
 			} else {
 			      $status='send';
 			      $error = false;
