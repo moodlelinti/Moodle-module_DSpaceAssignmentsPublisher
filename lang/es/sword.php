@@ -70,3 +70,7 @@ $string['search_collection'] = "Seleccione una colección del repositorio";
 $string['non_selected'] = "No ha seleccionado ninguna entrega";
 $string['cannot_get_collections'] = "No se han podido obtener las colecciones";
 $string['url_collection'] = "Ingrese la url de la colección";
+$string['config_prod_o_desarrollo'] = "Esta opcion le permite al administrador configurar el destino de los envios que maneje este módulo";
+$string['prod_o_desarrollo'] = "Seleccione el destino para los envios";
+$string['produccion'] = "Producción";
+$string['desarrollo'] = "Desarrollo";

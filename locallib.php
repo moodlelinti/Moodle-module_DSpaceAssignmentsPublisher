@@ -948,8 +948,8 @@ public function view( $action='grading') {
 			return $arr2;
 	}
   private function get_URL($url){
-		if($url[0]=='1'){error_log("devuelvo "."https://repositorio.info.unlp.edu.ar".substr($url,1));return "https://repositorio.info.unlp.edu.ar".substr($url,1);}
-		if($url[0]=='2'){error_log("devuelvo "."https://dspace-dev.linti.unlp.edu.ar".substr($url,1));return "https://dspace-dev.linti.unlp.edu.ar".substr($url,1);}
+		if($url[0]=='0'){error_log("devuelvo "."https://repositorio.info.unlp.edu.ar".substr($url,1));return "https://repositorio.info.unlp.edu.ar".substr($url,1);}
+		if($url[0]=='1'){error_log("devuelvo "."http://dspace-dev.linti.unlp.edu.ar".substr($url,1));return "http://dspace-dev.linti.unlp.edu.ar".substr($url,1);}
 		return "urlinvalida";	
 }  
     

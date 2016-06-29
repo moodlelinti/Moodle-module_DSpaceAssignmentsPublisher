@@ -1,4 +1,5 @@
 <?php
+global $CFG;
 require_once("lib.php");
 require_once($CFG->libdir.'/weblib.php');
 function sec_print($s) {
@@ -80,16 +81,35 @@ function isValidURL($url){
 	error_log("URL INVALIDA");
 	return false;
 }
-function get_URL($url){
-	if($url=='1'){ return "repositorio.info.unlp.edu.ar";}
-	if($url=='2'){return "dspace-dev.linti.unlp.edu.ar";}
+function get_URL(){
+   global $CFG;
+	if(isset($CFG->sword_select_repo)){
+		$opt=$CFG->sword_select_repo;
+	}
+	else{
+		$opt = 0; //toma el valor de produccion si no esta seteado.	
+	}
+	if($opt=='0'){ return "repositorio.info.unlp.edu.ar";}
+	if($opt=='1'){return "dspace-dev.linti.unlp.edu.ar";}
 	return "urlinvalida";	
 }
-function getCollections($id){
+function get_URLHeader(){
+	 global $CFG;
+	if(isset($CFG->sword_select_repo)){
+		$opt=$CFG->sword_select_repo;
+	}
+	else{
+		$opt = 0; //toma el valor de produccion si no esta seteado.	
+	}
+	if($opt==0){return "https://";}
+	else return "http://";
+}
+function getCollections(){
 
 
-	if(get_URL($id)!="urlinvalida"){
-		$url = new moodle_url("https://".get_URL($id) . '/rest/collections/');
+	if(get_URL()!="urlinvalida"){
+		$url = new moodle_url(get_URLHeader().get_URL() . '/rest/collections/');
+		error_log(get_URLHeader().get_URL() . '/rest/collections/');
 		$url->remove_all_params();
 		if (substr($url->get_path(true), -18,18) == '/rest/collections/') {
 					if (remoteFileExists($url)) {

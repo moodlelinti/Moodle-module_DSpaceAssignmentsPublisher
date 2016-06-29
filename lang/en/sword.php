@@ -71,3 +71,7 @@ $string['search_collection'] = "Select a collection from the repository";
 $string['url_collection'] = "Enter the collection's URL";
 $string['non_selected'] = "You have not selected any submission";
 $string['cannot_get_collections'] = "Failed to get the collections";
+$string['config_prod_o_desarrollo'] = "This options enable the administrator to configure the destination of the sendings realized with this module ";
+$string['prod_o_desarrollo'] = "Select destination for sendings";
+$string['produccion'] = "Production";
+$string['desarrollo'] = "Development";

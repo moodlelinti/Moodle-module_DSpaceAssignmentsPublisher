@@ -49,7 +49,7 @@ class mod_sword_mod_form extends moodleform_mod {
      * Defines forms elements
      */
     public function definition() {
-      
+      	global $CFG;
         $mform = $this->_form;
 
         //-------------------------------------------------------------------------------
@@ -82,8 +82,8 @@ class mod_sword_mod_form extends moodleform_mod {
          $mform->addElement('html', '<div>');
         //$mform->addElement('text', 'base_url', get_string('repositoryurl', 'sword'), array('size'=>'50'));
 				$REPOS = array(
-    		'1' => 'Repositorio Facultad Informatica',
-    		'2' => 'Desarrollo'
+    		'0' => 'Repositorio Facultad Informatica',
+    		'1' => 'Desarrollo'
 				);
 				//$select = $mform->addElement('select', 'base_url', get_string('repositoryurl','sword'), $REPOS);
 				//$select->setSelected('2');         
@@ -92,7 +92,7 @@ class mod_sword_mod_form extends moodleform_mod {
         //$mform->addElement('button', 'find', get_string("search"), array('onclick' => 'getCollections(null)'));
         //$mform->setType('find', PARAM_CLEAN);
        
-				 $ret= getCollections('1');
+				 $ret= getCollections();
 				 $collections= array();
 				 $collections_decoded= json_decode($ret);
 				 if($ret==false){
@@ -100,7 +100,7 @@ class mod_sword_mod_form extends moodleform_mod {
 				 }
 				 else{
 				 	foreach ($collections_decoded  as $collection) {
-			    	$key ='1' . '/sword/deposit/' . $collection->{'handle'};
+			    	$key = $this->get_Repo(). '/sword/deposit/' . $collection->{'handle'};
 			    	$value= $collection->{"name"};
 						$collections["$key"]= $value;
 				  }
@@ -230,7 +230,17 @@ class mod_sword_mod_form extends moodleform_mod {
         // add standard buttons, common to all modules
         $this->add_action_buttons();
     }
-    
+  private function get_Repo(){
+			//Devuelve 0 o 1 segun cual es el repo seleccionado en settings, 
+		 global $CFG;
+		if(isset($CFG->sword_select_repo)){
+			$opt=$CFG->sword_select_repo;
+		}
+		else{
+			$opt = 0; //toma el valor de produccion si no esta seteado.	
+		}
+		return $opt;	
+	}   
 
     
     
