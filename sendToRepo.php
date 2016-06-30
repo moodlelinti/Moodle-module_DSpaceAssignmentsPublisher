@@ -18,7 +18,7 @@ try {
 		$assignment_id  = required_param('assignment_id',PARAM_INT);// submissions selected
 		$user						= required_param('user',PARAM_RAW);
 		$password				=	required_param('password',PARAM_RAW);
-		
+	
 		$cm = get_coursemodule_from_id('assign', $assignment_id, 0, false, MUST_EXIST);
 		$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 		$cm_sword = get_coursemodule_from_id('sword', $swordid, 0, false, MUST_EXIST);

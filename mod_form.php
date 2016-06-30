@@ -31,6 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->dirroot.'/mod/sword/getCollections.php');
+require_once($CFG->dirroot.'/mod/sword/locallib.php');
    $PAGE->requires->js('/mod/sword/js/jquery.js', true);
    $PAGE->requires->js('/mod/sword/js/jquery-ui-1.10.4.custom.min.js', true);
    $PAGE->requires->js('/mod/sword/js/mod_form.js', true);
@@ -99,13 +100,30 @@ class mod_sword_mod_form extends moodleform_mod {
 							$mform-> addElement('html','<p>'."No se pudo obtener las colecciones"."</p>");
 				 }
 				 else{
-				 	foreach ($collections_decoded  as $collection) {
-			    	$key = $this->get_Repo(). '/sword/deposit/' . $collection->{'handle'};
-			    	$value= $collection->{"name"};
-						$collections["$key"]= $value;
-				  }
-					$mform->addElement('select', 'url_selector', get_string("selectcollection",'sword'),$collections);        
-	 			} 
+					 $soyprimero=true;
+					 $primerclave;
+				 	 foreach ($collections_decoded  as $collection) {
+			    	 $key = $this->get_Repo(). '/sword/deposit/' . $collection->{'handle'};
+			    	 $value= $collection->{"name"};
+						 $collections["$key"]= $value;
+						 if($soyprimero){
+						 	$primeraclave = $key; 
+							$soyprimero= false;
+						 }
+				   }
+					 //error_log("coleccion seleccionada".$this->get_selectedCollection());
+					 $select = $mform->addElement('select', 'url_selector', get_string("selectcollection",'sword'),$collections);
+				   if($this->get_selectedCollection()){
+							error_log("estaba seteado");      
+						 $select->setSelected($this->get_selectedCollection());
+					 }
+					 else{
+							error_log("tome el primero por defecto");
+							error_log("$primeraclave");
+							$select->setSelected($primeraclave);
+					 }	 			
+				 } 
+					
          if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('url_selector', PARAM_TEXT);
         } else {
@@ -241,7 +259,13 @@ class mod_sword_mod_form extends moodleform_mod {
 		}
 		return $opt;	
 	}   
-
+	private function get_selectedCollection(){
+			if(isset($this->current)){
+				if(isset($this->current->url)){
+					return $this->current->url;
+				}
+			}
+	}
     
     
 }

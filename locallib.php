@@ -952,7 +952,11 @@ public function view( $action='grading') {
 		if($url[0]=='1'){error_log("devuelvo "."http://dspace-dev.linti.unlp.edu.ar".substr($url,1));return "http://dspace-dev.linti.unlp.edu.ar".substr($url,1);}
 		return "urlinvalida";	
 }  
-    
+  public function getCollection(){
+		global $DB;
+  	$sword_metadata=$DB->get_record('sword', array('id' => $this->cm_sword->instance));
+		error_log(var_dump($sword_metadata));
+	}  
     
 
 }

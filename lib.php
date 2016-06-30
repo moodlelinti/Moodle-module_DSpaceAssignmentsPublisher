@@ -79,8 +79,9 @@ function sword_add_instance(stdClass $sword, mod_sword_mod_form $mform = null) {
     $sword->timecreated = time();
 
     # You may have to add extra stuff in here #
-		$sword->programminglanguage= convert($sword->programminglanguage);
-		    
+		if(isset($sword->programminglanguage)){
+			$sword->programminglanguage= convert($sword->programminglanguage);
+		}    
 		return $DB->insert_record('sword', $sword);
 }
 
