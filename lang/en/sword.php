@@ -75,3 +75,5 @@ $string['config_prod_o_desarrollo'] = "This options enable the administrator to 
 $string['prod_o_desarrollo'] = "Select destination for sendings";
 $string['produccion'] = "Production";
 $string['desarrollo'] = "Development";
+$string['url_repo'] = 'Other Repository';
+$string['config_url_repo'] = 'Enter URL manualy';

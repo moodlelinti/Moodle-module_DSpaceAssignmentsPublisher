@@ -74,3 +74,5 @@ $string['config_prod_o_desarrollo'] = "Esta opcion le permite al administrador c
 $string['prod_o_desarrollo'] = "Seleccione el destino para los envios";
 $string['produccion'] = "Producción";
 $string['desarrollo'] = "Desarrollo";
+$string['url_repo'] = 'Otro Repositorio';
+$string['config_url_repo'] = 'Este campo le permite ingresar la url manualmente';
