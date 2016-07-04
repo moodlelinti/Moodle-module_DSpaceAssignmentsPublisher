@@ -17,7 +17,7 @@ function enviar(course_id,assignment_id, swordid)
 	
   submissions =recuperarValores();
   if (submissions.length>0) {
-   //$("body").addClass("loading");
+   $("body").addClass("loading");
    user= document.getElementById("username").value;
 	 password=document.getElementById("password").value;
 	$.post( "sendToRepo.php",

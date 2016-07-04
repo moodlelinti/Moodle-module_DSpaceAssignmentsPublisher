@@ -77,3 +77,4 @@ $string['produccion'] = "Production";
 $string['desarrollo'] = "Development";
 $string['url_repo'] = 'Other Repository';
 $string['config_url_repo'] = 'Enter URL manualy';
+$string['setting_URL_error'] = 'The value is not a valid site';

@@ -76,3 +76,4 @@ $string['produccion'] = "Producción";
 $string['desarrollo'] = "Desarrollo";
 $string['url_repo'] = 'Otro Repositorio';
 $string['config_url_repo'] = 'Este campo le permite ingresar la url manualmente';
+$string['setting_URL_error'] = 'El valor ingresado no corresponde a un repositorio valido';

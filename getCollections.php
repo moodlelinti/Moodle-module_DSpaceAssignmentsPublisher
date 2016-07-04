@@ -2,19 +2,21 @@
 global $CFG;
 require_once("lib.php");
 require_once($CFG->libdir.'/weblib.php');
-function sec_print($s) {
- return htmlspecialchars(strip_tags($s), ENT_QUOTES);
-}
-function sec_print_array($arr){
-	foreach ($arr as &$act) {
-		if(!is_array($act)){
-    	$act = sec_print($act);
-		}
-		else{ sec_print_array($act);}	
+
+class RetrieveCollections{
+	private function sec_print($s) {
+ 		return htmlspecialchars(strip_tags($s), ENT_QUOTES);
 	}
-	return $arr;
-}
-function remoteFileExists($url) {
+  private function sec_print_array($arr){
+		foreach ($arr as &$act) {
+			if(!is_array($act)){
+		  	$act = sec_print($act);
+			}
+			else{ sec_print_array($act);}	
+		}
+			return $arr;
+		}
+	private function remoteFileExists($url) {
     error_log("URL en cuestion ".$url);
     $curl = curl_init($url);
 
@@ -38,13 +40,10 @@ function remoteFileExists($url) {
     }
 
     curl_close($curl);
-    /*if($ret){error_log("BIENN!! hay un archivo para la URL");}
-    else{error_log("No hay ningun archivo para la URl");}
-    */
-		return $ret;
-}
+    return $ret;
+	}
 /*funcion por si se vuelve a usar campo de texto para la URL*/
-function isValidURL($url){
+/*function isValidURL($url){
 	$slicedURL= parse_url($url);
 	foreach($slicedURL as $k=> $v){
 		error_log($k. "     ".$v);
@@ -80,33 +79,33 @@ function isValidURL($url){
 	}
 	error_log("URL INVALIDA");
 	return false;
-}
-function get_URL(){
-   global $CFG;
-	if(isset($CFG->sword_select_repo)){
-		$opt=$CFG->sword_select_repo;
+}*/
+	//funcion a rearmar, por ahi que sea publica?
+	private function get_URL(){
+   	global $CFG;
+		if(isset($CFG->sword_select_repo)){
+			$opt=$CFG->sword_select_repo;
+		}
+		else{
+			$opt = 0; //toma el valor de produccion si no esta seteado.	
+		}
+		if($opt=='0'){ return "repositorio.info.unlp.edu.ar";}
+		if($opt=='1'){return "dspace-dev.linti.unlp.edu.ar";}
+		return "urlinvalida";	
 	}
-	else{
-		$opt = 0; //toma el valor de produccion si no esta seteado.	
+	private function get_URLHeader(){
+		global $CFG;
+		if(isset($CFG->sword_select_repo)){
+			$opt=$CFG->sword_select_repo;
+		}
+		else{
+			$opt = 0; //toma el valor de produccion si no esta seteado.	
+		}
+		if($opt==0){return "https://";}
+		else return "http://";
 	}
-	if($opt=='0'){ return "repositorio.info.unlp.edu.ar";}
-	if($opt=='1'){return "dspace-dev.linti.unlp.edu.ar";}
-	return "urlinvalida";	
-}
-function get_URLHeader(){
-	 global $CFG;
-	if(isset($CFG->sword_select_repo)){
-		$opt=$CFG->sword_select_repo;
-	}
-	else{
-		$opt = 0; //toma el valor de produccion si no esta seteado.	
-	}
-	if($opt==0){return "https://";}
-	else return "http://";
-}
-function getCollections(){
 
-
+	public function getCollections(){
 	if(get_URL()!="urlinvalida"){
 		$url = new moodle_url(get_URLHeader().get_URL() . '/rest/collections/');
 		error_log(get_URLHeader().get_URL() . '/rest/collections/');
@@ -127,5 +126,17 @@ function getCollections(){
 		}
 		return false;
 	}
+	public function hasCollections($URL){
+		$url = new moodle_url($URL. '/rest/collections/');
+		error_log($URL. '/rest/collections/');
+		$url->remove_all_params();
+		if (substr($url->get_path(true), -18,18) == '/rest/collections/') {
+					if ($this->remoteFileExists($url)) {
+					  return true;
+					}
+			}
+		return false;
+	}
+}
 
 
