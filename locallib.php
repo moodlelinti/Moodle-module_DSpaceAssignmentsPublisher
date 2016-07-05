@@ -30,6 +30,7 @@ require_once($CFG->libdir . '/eventslib.php');
 require_once($CFG->libdir . '/portfolio/caller.php');
 require_once($CFG->dirroot . '/mod/sword/sword_submissions_form.php');
 require_once($CFG->dirroot . '/mod/sword/renderer.php');
+require_once($CFG->dirroot . '/mod/sword/getCollections.php');
 /**
  * Internal library of functions for module sword
  *
@@ -948,10 +949,15 @@ public function view( $action='grading') {
 			return $arr2;
 	}
   private function get_URL($url){
+		$retriever = new RetrieveCollections();
+		$aux= $retriever->get_URL($url[0]);
+		return $aux.substr($url,1);
+		/*
 		if($url[0]=='0'){error_log("devuelvo "."https://repositorio.info.unlp.edu.ar".substr($url,1));return "https://repositorio.info.unlp.edu.ar".substr($url,1);}
 		if($url[0]=='1'){error_log("devuelvo "."http://dspace-dev.linti.unlp.edu.ar".substr($url,1));return "http://dspace-dev.linti.unlp.edu.ar".substr($url,1);}
-		return "urlinvalida";	
-}  
+		if($url[0]=='2'){error_log("text URL ".)}
+		return "urlinvalida";	*/
+	}  
   public function getCollection(){
 		global $DB;
   	$sword_metadata=$DB->get_record('sword', array('id' => $this->cm_sword->instance));

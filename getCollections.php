@@ -10,9 +10,9 @@ class RetrieveCollections{
   private function sec_print_array($arr){
 		foreach ($arr as &$act) {
 			if(!is_array($act)){
-		  	$act = sec_print($act);
+		  	$act = $this->sec_print($act);
 			}
-			else{ sec_print_array($act);}	
+			else{ $this->sec_print_array($act);}	
 		}
 			return $arr;
 		}
@@ -81,43 +81,43 @@ class RetrieveCollections{
 	return false;
 }*/
 	//funcion a rearmar, por ahi que sea publica?
-	private function get_URL(){
+	public function get_URL($aux=null){
    	global $CFG;
-		if(isset($CFG->sword_select_repo)){
-			$opt=$CFG->sword_select_repo;
+		$opt;
+		if(is_null($aux)){
+			$opt = $aux;
 		}
 		else{
-			$opt = 0; //toma el valor de produccion si no esta seteado.	
+			if(isset($CFG->sword_select_repo)){
+				$opt=$CFG->sword_select_repo;
+			}
+			else{
+				$opt = 0; //toma el valor de produccion si no esta seteado.	
+			}
 		}
-		if($opt=='0'){ return "repositorio.info.unlp.edu.ar";}
-		if($opt=='1'){return "dspace-dev.linti.unlp.edu.ar";}
+		if($opt=='0'){ return "https://repositorio.info.unlp.edu.ar";}
+		if($opt=='1'){return "http://dspace-dev.linti.unlp.edu.ar";}
+		if($opt=='2'){
+			if(isset($CFG->sword_repo_url)){
+				return $CFG->sword_repo_url;			
+			}
+		}
 		return "urlinvalida";	
-	}
-	private function get_URLHeader(){
-		global $CFG;
-		if(isset($CFG->sword_select_repo)){
-			$opt=$CFG->sword_select_repo;
-		}
-		else{
-			$opt = 0; //toma el valor de produccion si no esta seteado.	
-		}
-		if($opt==0){return "https://";}
-		else return "http://";
 	}
 
 	public function getCollections(){
-	if(get_URL()!="urlinvalida"){
-		$url = new moodle_url(get_URLHeader().get_URL() . '/rest/collections/');
-		error_log(get_URLHeader().get_URL() . '/rest/collections/');
+	if($this->get_URL()!="urlinvalida"){
+		$url = new moodle_url($this->get_URL() . '/rest/collections/');
+		error_log($this->get_URL() . '/rest/collections/');
 		$url->remove_all_params();
 		if (substr($url->get_path(true), -18,18) == '/rest/collections/') {
-					if (remoteFileExists($url)) {
+					if ($this->remoteFileExists($url)) {
 					  $ch = curl_init($url);
 					  curl_setopt($ch, CURLOPT_HEADER, 0);
 					  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //no usa salida estandar
 					  $output = curl_exec($ch);
 					  curl_close($ch);
-					  $ret = json_encode(sec_print_array(json_decode($output,true)));					 
+					  $ret = json_encode($this->sec_print_array(json_decode($output,true)));					 
 					  if ($ret != null ) {       
 					  	return $ret;       
 						}

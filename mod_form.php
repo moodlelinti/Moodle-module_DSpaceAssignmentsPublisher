@@ -49,8 +49,10 @@ class mod_sword_mod_form extends moodleform_mod {
     /**
      * Defines forms elements
      */
+		private $retriever;
     public function definition() {
       	global $CFG;
+				$retriever = new RetrieveCollections();
         $mform = $this->_form;
 
         //-------------------------------------------------------------------------------
@@ -93,7 +95,7 @@ class mod_sword_mod_form extends moodleform_mod {
         //$mform->addElement('button', 'find', get_string("search"), array('onclick' => 'getCollections(null)'));
         //$mform->setType('find', PARAM_CLEAN);
        
-				 $ret= getCollections();
+				 $ret= $retriever->getCollections();
 				 $collections= array();
 				 $collections_decoded= json_decode($ret);
 				 if($ret==false){

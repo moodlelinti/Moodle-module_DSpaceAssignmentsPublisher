@@ -27,17 +27,37 @@ function correctURL(){
 */
 //Cambio en vez de usar ajax solo valida que la URL sea una URL bien formada???
 
+function actualizar(){
+	//comboboxcontainer
+	 containerCombo = $("#admin-sword_select_repo");
+	//combobox
+	combo = $("#id_s__sword_select_repo");
+	//textcontainer
+	containerText = $("#admin-sword_repo_url");
+	//text
+	text = $("#id_s__sword_repo_url");	
+	if((combo.val()==0)||(combo.val()==1)){
+		containerText.hide();
+	}
+	if(combo.val()==0){
+		text.val("https://repositorio.info.unlp.edu.ar")
+	}
+	if(combo.val()==1){
+		text.val("http://dspace-dev.linti.unlp.edu.ar");
+	}
+	if(combo.val()==2){
+		containerText.show();
+	}
+}
 
+$(document).ready( function() {
 
-
-
-$(document).ready( function() { 
-	$("#id_s__sword_repo_url").change( function() {
-			//alert($("#id_s__sword_repo_url").val());
-			url= $("#id_s__sword_repo_url").val();
-			correctURL();
+	actualizar();
+	combo = $("#id_s__sword_select_repo");
+	combo.change(actualizar);
+	text = $("#id_s__sword_repo_url");	
+	text.change(correctURL); 
 	 }); 
-});
 
 
 
