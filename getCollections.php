@@ -84,7 +84,7 @@ class RetrieveCollections{
 	public function get_URL($aux=null){
    	global $CFG;
 		$opt;
-		if(is_null($aux)){
+		if(!is_null($aux)){
 			$opt = $aux;
 		}
 		else{
@@ -95,14 +95,24 @@ class RetrieveCollections{
 				$opt = 0; //toma el valor de produccion si no esta seteado.	
 			}
 		}
-		if($opt=='0'){ return "https://repositorio.info.unlp.edu.ar";}
-		if($opt=='1'){return "http://dspace-dev.linti.unlp.edu.ar";}
-		if($opt=='2'){
-			if(isset($CFG->sword_repo_url)){
-				return $CFG->sword_repo_url;			
+		if($opt=='0'){
+			if(isset($CFG->sword_prod_url)){
+					return $CFG->sword_prod_url;
+			}
+			else{ 
+					error_log("La URL de produccion fue solicitada pero no tiene ningun valor");
+					return "URL invalida";
 			}
 		}
-		return "urlinvalida";	
+		if($opt=='1'){
+		if(isset($CFG->sword_dev_url)){
+					return $CFG->sword_dev_url;
+			}
+			else{ 
+					error_log("La URL de desarrollo fue solicitada pero no tiene ningun valor");
+					return "URL invalida";
+			}
+		}
 	}
 
 	public function getCollections(){

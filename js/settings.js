@@ -1,7 +1,7 @@
-function correctURL(){
- url = $("#id_s__sword_repo_url").val();
- if(url.slice(-1)=="/"){
-		$("#id_s__sword_repo_url").val(url.substring(0,url.length-1));
+function correctURL(val){
+alert(val.val());
+ if(val.slice(-1)=="/"){
+		val.val(url.substring(0,url.length-1));
  }
 }
 /*function getCollectionswithURL(){
@@ -32,21 +32,23 @@ function actualizar(){
 	 containerCombo = $("#admin-sword_select_repo");
 	//combobox
 	combo = $("#id_s__sword_select_repo");
-	//textcontainer
-	containerText = $("#admin-sword_repo_url");
-	//text
+	//produccion text container
+	containerProd = $("#admin-sword_prod_url");
+	//produccion text 
 	text = $("#id_s__sword_repo_url");	
-	if((combo.val()==0)||(combo.val()==1)){
-		containerText.hide();
-	}
+	//desarrollo text container
+	containerDev = $("#admin-sword_dev_url");
+	//dev text 
+	text = $("#id_s__sword_dev_url");
+		
+
 	if(combo.val()==0){
-		text.val("https://repositorio.info.unlp.edu.ar")
+		containerDev.hide();
+		containerProd.show();
 	}
 	if(combo.val()==1){
-		text.val("http://dspace-dev.linti.unlp.edu.ar");
-	}
-	if(combo.val()==2){
-		containerText.show();
+		containerProd.hide();
+		containerDev.show();
 	}
 }
 
@@ -55,8 +57,23 @@ $(document).ready( function() {
 	actualizar();
 	combo = $("#id_s__sword_select_repo");
 	combo.change(actualizar);
-	text = $("#id_s__sword_repo_url");	
-	text.change(correctURL); 
+	text = $("#id_s__sword_prod_url");
+	text.change(function(){
+		text = $("#id_s__sword_prod_url").val();
+	 	if(text.slice(-1)=="/"){
+			alert("recorto");
+			$("#id_s__sword_prod_url").val(text.substring(0,text.length-1));
+ 		}
+	}	
+	);
+	text2 = $("#id_s__sword_dev_url");	
+	text2.change(function(){
+		text = $("#id_s__sword_dev_url").val();
+	 	if(text.slice(-1)=="/"){
+			$("#id_s__sword_dev_url").val(text.substring(0,text.length-1));
+ 		}
+	}	
+	);
 	 }); 
 
 

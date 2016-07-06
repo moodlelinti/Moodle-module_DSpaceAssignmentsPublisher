@@ -952,11 +952,6 @@ public function view( $action='grading') {
 		$retriever = new RetrieveCollections();
 		$aux= $retriever->get_URL($url[0]);
 		return $aux.substr($url,1);
-		/*
-		if($url[0]=='0'){error_log("devuelvo "."https://repositorio.info.unlp.edu.ar".substr($url,1));return "https://repositorio.info.unlp.edu.ar".substr($url,1);}
-		if($url[0]=='1'){error_log("devuelvo "."http://dspace-dev.linti.unlp.edu.ar".substr($url,1));return "http://dspace-dev.linti.unlp.edu.ar".substr($url,1);}
-		if($url[0]=='2'){error_log("text URL ".)}
-		return "urlinvalida";	*/
 	}  
   public function getCollection(){
 		global $DB;
