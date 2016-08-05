@@ -655,8 +655,10 @@ public function view( $action='grading') {
            if ($arr!=NULL) {
 	      $datos["subject"]=array($arr);
            }*/
-           if ($sword_metadata->subject != NULL)      {
-	    				$datos["subject"]=explode($sword_metadata->subject," ");
+				   if ($sword_metadata->subject != NULL)      {
+							error_log("SUBJECT ".$sword_metadata->subject);
+	    				$datos["subject"]=explode(" ",$sword_metadata->subject);
+							error_log("subject bien");
            }
          if($sword_metadata->type != NULL) {
             $datos["type"]=$sword_metadata->type;
