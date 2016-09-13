@@ -33,3 +33,10 @@ $module->version     = 2014060225;//2014060203;               // If version == 0
 $module->requires  = 2010031900;      // Requires this Moodle version
 $module->cron      = 0;               // Period for cron to check this module (secs)
 $module->component = 'mod_sword'; // To check on upgrade, that module sits in correct place
+
+/*REMPLAZAR MODULE POR PLUGIN  PARA LA VERSION 3.1
+$plugin->version     = 2014060225;//2014060203;               // If version == 0 then module will not be installed
+$plugin->requires  = 2010031900;      // Requires this Moodle version
+$plugin->cron      = 0;               // Period for cron to check this module (secs)
+$plugin->component = 'mod_sword'; // To check on upgrade, that module sits in correct place
+*/
