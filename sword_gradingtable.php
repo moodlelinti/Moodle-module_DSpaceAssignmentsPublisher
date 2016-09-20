@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir.'/tablelib.php');
 require_once($CFG->libdir.'/gradelib.php');
 require_once($CFG->dirroot.'/mod/assign/locallib.php');
+require_once($CFG->dirroot.'/mod/sword/locallib.php');
 
 
 /**
@@ -1146,14 +1147,34 @@ class sword_publish_table extends table_sql implements renderable {
      * @return mixed string or NULL
      */
     public function other_cols($colname, $row) {
+				global $DB;
         // For extra user fields the result is already in $row.
+				$swordid        = required_param('sword',PARAM_INT);
+				$retorno;
         if (empty($this->plugincache[$colname])) {	    
             if ($colname == 'publish_status') {
                if (!empty($row->$colname)) { 
-                  return get_string($row->$colname,'sword');
+                  $retorno = get_string($row->$colname,'sword');
                } else {
-                  return get_string('nosend','sword');
+                  $retorno = get_string('nosend','sword');
                }
+						//obtengo los valores de la submision para hacer el chequeo
+						$author= $row->firstname." ".$row->lastname;
+						$aux = $this->assignment->get_instance();
+						$name = $aux->name."-".$row->lastname;
+						$collection = sword_assign::getCollectionURL($swordid);
+						$item = array("name"=>$name, "author"=>$author);
+
+						//hago el chequeo para ver si el item ya existe en la coleccion
+						$rt = new RetrieveCollections();
+						$presente = $rt ->CollectionHasItem($collection, $item);
+						if($presente){
+							$retorno .=". ".  get_string('item_present', 'sword');				
+						}
+						else{
+							$retorno .= get_string('item_absent', 'sword');
+						}
+						return $retorno;
             } else {
                 return $row->$colname;
             }

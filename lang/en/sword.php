@@ -79,3 +79,5 @@ $string['prod_repo'] = "Production URL";
 $string['dev_repo'] = "Development URL";
 $string['config_url_repo'] = 'Enter URL manualy';
 $string['setting_URL_error'] = 'The value is not a valid site';
+$string['item_present'] = 'Already present in collection';
+$string['item_absent'] = ' ';

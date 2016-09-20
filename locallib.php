@@ -955,10 +955,12 @@ public function view( $action='grading') {
 		$aux= $retriever->get_URL($url[0]);
 		return $aux.substr($url,1);
 	}  
-  public function getCollection(){
+  public static function getCollectionURL($swordid){
 		global $DB;
-  	$sword_metadata=$DB->get_record('sword', array('id' => $this->cm_sword->instance));
-		error_log(var_dump($sword_metadata));
+  	$sword_metadata=$DB->get_record('sword', array('id' =>$swordid));
+		//error_log(var_dump($sword_metadata));
+		return substr($sword_metadata->url,16);
+		
 	}  
     
 

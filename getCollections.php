@@ -42,44 +42,22 @@ class RetrieveCollections{
     curl_close($curl);
     return $ret;
 	}
-/*funcion por si se vuelve a usar campo de texto para la URL*/
-/*function isValidURL($url){
-	$slicedURL= parse_url($url);
-	foreach($slicedURL as $k=> $v){
-		error_log($k. "     ".$v);
-	}
-	if(!isset($slicedURL["host"])){
-		if($slicedURL["path"]=="dspace-dev.linti.unlp.edu.ar"){
-			return true;
-		}
-	}
-	else{
-		if(($slicedURL["host"]=="dspace-dev.linti.unlp.edu.ar")&&(!isset($slicedURL["path"]))){
-			return true;
+	private function restQuerry($url){
+		//$url->remove_all_params();
+		if ($this->remoteFileExists($url)) {
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //no usa salida estandar
+			$output = curl_exec($ch);
+			curl_close($ch);
+			$ret =$this->sec_print_array(json_decode($output,true));					 
+			return $ret;	
 		}
 		else{
-				if(isset($slicedURL["path"])){
-					if($slicedURL["path"]=="/"){return true;}
-				}
+			error_log("hubo un error ejecutando la consulta REST con la URL : ".$url);
+			return -1;
 		}
 	}
-
-	if(!isset($slicedURL["host"])){
-		if($slicedURL["path"]=="repositorio.info.unlp.edu.ar"){
-			return true;
-		}
-	}
-	else{
-		if(($slicedURL["host"]=="repositorio.info.unlp.edu.ar")&&(!isset($slicedURL["path"]))){
-			return true;
-		}
-		else{
-				if($slicedURL["path"]=="/"){return true;}
-		}
-	}
-	error_log("URL INVALIDA");
-	return false;
-}*/
 	//funcion a rearmar, por ahi que sea publica?
 	public function get_URL($aux=null){
    	global $CFG;
@@ -145,6 +123,46 @@ class RetrieveCollections{
 					  return true;
 					}
 			}
+		return false;
+	}
+	private function getCollectionWithHandle($collection_handle,$url){
+		$collections = $this->restQuerry($url.'/rest/collections/');
+		if($collections!=-1){		
+			foreach($collections as $col){
+				//error_log(var_dump($col));
+				if(strtolower($col['handle'])==strtolower($collection_handle)){
+					return $col;		
+				}
+			}
+		}
+	return -1;
+}
+	
+public function collectionHasItem($collection_handle, $item){
+	$url= $this->get_URL();
+	$collection= $this->getCollectionWithHandle($collection_handle,$url);
+	if( $collection!= -1){
+		//collection link identifica a la coleccion.
+		$colWithItems = $this->restQuerry($url.$collection['link']."?expand=items");		
+		//items son los items en la coleccion actual
+		$items = $colWithItems["items"];		
+		//error_log(var_dump($items));
+
+		$encontrado = false;
+		foreach($items as $it){
+			$item_completo= $this->restQuerry($url.$it['link']."?expand=all");
+			//error_log(var_dump($item_completo));
+			$meta = $item_completo["metadata"];
+			foreach($meta as $m){
+				if($m["key"]=="dc.contributor.author")
+					$autor= $m["value"];			
+			}
+			if(($item_completo["name"]== $item["name"])&&($autor==$item["author"])){
+					$encontrado = true;
+			}			
+		}
+		return $encontrado;	
+	}
 		return false;
 	}
 }

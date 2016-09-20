@@ -78,3 +78,5 @@ $string['prod_repo'] = "URL producción";
 $string['dev_repo'] = "URL desarrollo";
 $string['config_url_repo'] = 'Este campo le permite ingresar la url manualmente';
 $string['setting_URL_error'] = 'El valor ingresado no corresponde a un repositorio valido';
+$string['item_present'] = 'Presente en la coleccion destino';
+$string['item_absent'] = ' ';
