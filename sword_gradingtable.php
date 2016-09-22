@@ -1166,8 +1166,10 @@ class sword_publish_table extends table_sql implements renderable {
 						$item = array("name"=>$name, "author"=>$author);
 
 						//hago el chequeo para ver si el item ya existe en la coleccion
+						error_log("consulta rest para ver si el item ya existe");
 						$rt = new RetrieveCollections();
 						$presente = $rt ->CollectionHasItem($collection, $item);
+						error_log("presente =".$presente);
 						if($presente){
 							$retorno .=". ".  get_string('item_present', 'sword');				
 						}

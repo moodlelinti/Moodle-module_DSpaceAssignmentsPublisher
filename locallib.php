@@ -31,6 +31,7 @@ require_once($CFG->libdir . '/portfolio/caller.php');
 require_once($CFG->dirroot . '/mod/sword/sword_submissions_form.php');
 require_once($CFG->dirroot . '/mod/sword/renderer.php');
 require_once($CFG->dirroot . '/mod/sword/getCollections.php');
+require_once($CFG->dirroot . '/mod/sword/ObtainAuthors.php');
 /**
  * Internal library of functions for module sword
  *
@@ -481,8 +482,8 @@ public function view( $action='grading') {
         }
 
        $error = false;
-           $sword_metadata=$DB->get_record('sword', array('id' => $this->cm_sword->instance));
-					
+       $sword_metadata=$DB->get_record('sword', array('id' => $this->cm_sword->instance));
+	   //error_log(var_dump($students));			
         // Get all the files for each student.
         foreach ($students_selected as $student) {
             $userid = $student->id;
@@ -517,13 +518,13 @@ public function view( $action='grading') {
                               if ($file instanceof stored_file) { 
 				  
 				  $filetitle=$file->get_filename();
-                  // $aux= $this->handleLine("hola;comoestas");
+                 //error_log("nombre de archivo: ".var_dump($filetitle));
 		
-				  $newstring = substr($filetitle, -3);
+				  /*$newstring = substr($filetitle, -3);
                   if($newstring=="txt"){
 				    $contents = $file->get_content();
                     $arr[] = explode("\n", $contents);                
-				  }
+				  }*/
 
 
                     /*
@@ -537,24 +538,10 @@ public function view( $action='grading') {
                     */
 								
                if($filetitle =="autores.txt"){
-                    $contents2 = $file->get_content();
-                    $eolchar = $this->detectEOLType($contents2);
-                    if(strpos($contents2,"\r\n") !== false){
-                 			$arr2 = explode("\r\n", $contents2); /*llamo a la funcion detectEOLTypes para obtener el caracter que divide el string por lineas y usarlo en el explode*/
-										}else{
-											$arr2= explode($eolchar,$contents2);
-											}
-										$arr2=$this->remove_empty_slots($arr2);									
-                    $all_authors = array();
-                    for ($i=0;$i<count($arr2);$i++)  
-                    {
-												$esLineaValida=true;
-                        $st = $this-> handleLine($arr2[$i],$esLineaValida); // Llama a la funcion, retorna un arreglo con $st[0] Nombre y $st[1] correoElecctronico, si la linea no esta vacia /
-												if($esLineaValida){                        
-													array_push($all_authors, $st); // Guarda el arreglo $st en el arreglo $arr3 //
-                    	}
-		    						}
-                    continue;
+               	$aux = new AutorFetcher($file);
+               	$all_authors = $aux->getAuthors();
+               	//var_dump($all_authors);
+                continue;
                 }
 					    
 
@@ -738,9 +725,9 @@ public function view( $action='grading') {
 		$i;
 		for($i=0; $i < count($authors); $i++){
 			$aux=$authors[$i];
-			if(!empty($aux[0])){
-				if(isset($aux[0])){
-      		$packager->addCreator($aux[0]);
+			if(!empty($aux)){
+				if(isset($aux)){
+      		$packager->addCreator($aux);
 				}
 			}
 			
@@ -919,6 +906,7 @@ public function view( $action='grading') {
             //funcion que maneja una linea del archivo dividiendo por ; el nombre del correo_electronico
             //error_log("llegue a la function");
 	    if((strlen($string)>3)&&(strpos($string,';')!=false)){
+	    		//error_log(var_dump(explode(";", $string)));
             	return explode(";", $string);
 		}
 	    else{
@@ -928,16 +916,15 @@ public function view( $action='grading') {
        }
     private function detectEOLType($string){
 	//http://stackoverflow.com/questions/11066857/detect-eol-type-using-php
-	//funcion que devuelve el caracter que identifica el caracter utilizado como fin de linea en el string
-	/*	
-		return $eol;
-	*/
     $eols = array_count_values(str_split(preg_replace("/[^\r\n]/", "", $string)));
+    //error_log("eols".var_dump($eols));
     $eola = array_keys($eols, max($eols));
-    $eol = implode("", $eola);
+    //error_log("eola".var_dump($eola));
+    return $eola;
+    /*$eol = implode("", $eola);
     $bool1= strpos("\r\n",$string != 0);
     if($bool1){return  "\r\n";}
-    else{return $eol;}
+    else{return $eol;}*/
     }
 	private function remove_empty_slots($arr2){
 			for($i= 0; $i < count($arr2);$i++){

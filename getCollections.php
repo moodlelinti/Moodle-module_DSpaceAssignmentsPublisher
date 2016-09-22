@@ -138,8 +138,9 @@ class RetrieveCollections{
 	return -1;
 }
 	
-public function collectionHasItem($collection_handle, $item){
+	public function collectionHasItem($collection_handle, $item){
 	$url= $this->get_URL();
+	$encontrado = false;
 	$collection= $this->getCollectionWithHandle($collection_handle,$url);
 	if( $collection!= -1){
 		//collection link identifica a la coleccion.
@@ -148,19 +149,21 @@ public function collectionHasItem($collection_handle, $item){
 		$items = $colWithItems["items"];		
 		//error_log(var_dump($items));
 
-		$encontrado = false;
+
 		foreach($items as $it){
+			error_log("iterando por los items");
 			$item_completo= $this->restQuerry($url.$it['link']."?expand=all");
 			//error_log(var_dump($item_completo));
 			$meta = $item_completo["metadata"];
 			foreach($meta as $m){
 				if($m["key"]=="dc.contributor.author")
 					$autor= $m["value"];			
-			}
 			if(($item_completo["name"]== $item["name"])&&($autor==$item["author"])){
-					$encontrado = true;
+					$encontrado = true;break;
+			}
 			}			
 		}
+		error_log("termine de iterar");
 		return $encontrado;	
 	}
 		return false;
